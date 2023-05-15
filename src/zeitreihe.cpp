@@ -1,11 +1,13 @@
 #include "zeitreihe.h"
 #include <vector>
+#include <iostream>
 using namespace std;
 
 
 zeitreihe::zeitreihe(vector<int>& knoten, vector<int>& kanten){
 
     //Graph zu Teilgraphen
+    erstelleTeilgraphenSet(knoten, kanten);
 
     //ZHK der Teilgraphen finden
         //Tiefensuche
@@ -53,5 +55,24 @@ void zeitreihe::erstelleTeilgraphenSet(vector<int>& knoten, vector<int>& kanten)
             teilgraphenKanten[aktZeitAttribut-1].push_back(kanten[e+1]);
         }
 
+    }
+    anzahlTeilgraphen = aktMaxZeitattribut;
+};
+
+void zeitreihe::printTeilgraphKnotenUndKanten(){
+
+    for(int i = 0; i < size(teilgraphenKnoten); i++){
+
+        cout << "Teilgraph Nr.: " + to_string(i+1) << endl;
+        cout << "   Knoten: " << endl;
+        set<int, greater<int> >::iterator itr;
+        for(itr = teilgraphenKnoten[i].begin(); itr != teilgraphenKnoten[i].end(); itr++) {
+                cout << "   " << *itr << " ";
+        }
+        cout << "   Kanten: " << endl;
+        for(int e = 0; e < size(teilgraphenKanten[i]); e+=2){
+
+            cout << "   (" + to_string(teilgraphenKanten[i][e]) + "," + to_string(teilgraphenKanten[i][e+1]) + ")" << endl;
+        }
     }
 };
