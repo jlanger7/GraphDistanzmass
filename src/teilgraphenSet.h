@@ -1,5 +1,5 @@
-#ifndef TEILGRAPHENSET_H
-#define TEILGRAPHENSET_H
+#ifndef teilgraphenSet_H
+#define teilgraphenSet_H
 #include <vector>
 #include <set>
 #include "knoten.h"
@@ -9,8 +9,8 @@ using namespace std;
 class teilgraphenSet{
 
     private:
-    vector<graph&> teilgraphen;
-    graph& gesamtGraph;
+    vector<graph>* teilgraphen;
+    graph gesamtGraph;
     int anzahlTeilgraphen;
 
 
@@ -18,7 +18,6 @@ class teilgraphenSet{
     teilgraphenSet();
     teilgraphenSet(graph& inputGraph);
     void erstelleTeilgraphenSet();
-    /
     int getAnzahlTeilgraphen(){
         return anzahlTeilgraphen;
     };

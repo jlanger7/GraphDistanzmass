@@ -16,8 +16,8 @@ class graph{
     graph(vector<knoten*>& knotenMengeIn);
 
     void addKnoten(knoten* knotenIn);
-    vector<knoten*>& getKnoten(){
-        return &knotenMenge;
+    vector<knoten*>& getKnotenMenge(){
+        return knotenMenge;
     };
 
 

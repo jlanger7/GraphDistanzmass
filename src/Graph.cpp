@@ -1,8 +1,12 @@
-#include "knoten.h"
-#include "graph.h"
 #include <vector>
 #include <iostream>
+#include "knoten.h"
+#include "graph.h"
 using namespace std;
+
+graph::graph(){
+
+};
 
 graph::graph(vector<knoten*>& knotenMengeIn){
 
@@ -11,5 +15,5 @@ graph::graph(vector<knoten*>& knotenMengeIn){
 
 void graph::addKnoten(knoten* knotenIn){
 
-    knoten.push_back(knotenIn);
+    knotenMenge.push_back(knotenIn);
 };

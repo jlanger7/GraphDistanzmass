@@ -1,6 +1,6 @@
-#include "knoten.h"
 #include <vector>
 #include <iostream>
+#include "knoten.h"
 using namespace std;
 
 knoten::knoten(){
@@ -13,7 +13,7 @@ knoten::knoten(int idIn, int zeitAttributIn){
     zeitAttribut = zeitAttributIn;
 };
 
-void knoten::addNachbarn(int nachbarId){
+void knoten::addNachbarn(knoten* nachbar){
 
-    adjazenzListe.push_back(nachbarId);
+    adjazenzListe.push_back(nachbar);
 };

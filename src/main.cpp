@@ -8,7 +8,9 @@
 #include <ctime>
 #include <filesystem>
 #include <chrono>
-
+#include "knoten.h"
+#include "graph.h"
+#include "teilgraphenSet.h"
 #include "zeitreihe.h"
 #include "../tests/zeitreiheTest.h"
 using namespace std;
@@ -22,24 +24,64 @@ int main()
 {
    cout << "Hello World" << endl;
 
-   vector<int>* knoten = new vector<int>;
-   cout << "was ist hier" << endl;
-   (*knoten).push_back(1);
-   (*knoten).push_back(2);
-   cout << "was ist hier1" << endl;
-   cout << (*knoten)[0] << endl;
-   cout << (*knoten)[1] << endl;
+   vector<knoten*> knotenListe;
+   for(int i = 0; i < 9; i++){
+      
+      int zeitAttribut = 0;
+      if(i < 3){
+         zeitAttribut = 1;
+      }else if(i < 6){
+         zeitAttribut = 2;
+      }else if(i < 9){
+         zeitAttribut = 3;
+      }
+      knoten* v = new knoten(i, zeitAttribut);
+      knotenListe.push_back(v);
+   }
 
-   cout << "was ist hier2" << endl;
+   cout << "Knotenliste erstellt" << endl;
+   cout << size(knotenListe) << endl;
 
-   delete knoten;
+   (*knotenListe[0]).addNachbarn(knotenListe[1]);
+   (*knotenListe[0]).addNachbarn(knotenListe[2]);
+   (*knotenListe[0]).addNachbarn(knotenListe[3]);
+   (*knotenListe[1]).addNachbarn(knotenListe[0]);
+   (*knotenListe[1]).addNachbarn(knotenListe[2]);
+   (*knotenListe[2]).addNachbarn(knotenListe[0]);
+   (*knotenListe[2]).addNachbarn(knotenListe[1]);
+   (*knotenListe[3]).addNachbarn(knotenListe[4]);
+   (*knotenListe[3]).addNachbarn(knotenListe[5]);
+   (*knotenListe[4]).addNachbarn(knotenListe[3]);
+   (*knotenListe[4]).addNachbarn(knotenListe[5]);
+   (*knotenListe[5]).addNachbarn(knotenListe[3]);
+   (*knotenListe[5]).addNachbarn(knotenListe[4]);
+   (*knotenListe[5]).addNachbarn(knotenListe[6]);
+   (*knotenListe[6]).addNachbarn(knotenListe[7]);
+   (*knotenListe[6]).addNachbarn(knotenListe[8]);
+   (*knotenListe[7]).addNachbarn(knotenListe[6]);
+   (*knotenListe[7]).addNachbarn(knotenListe[8]);
+   (*knotenListe[8]).addNachbarn(knotenListe[6]);
+   (*knotenListe[8]).addNachbarn(knotenListe[7]);
 
-   int a = 10;
-   int b = 30029;
-   int c= 45838395;
+   cout << "zeiitattribut 5: " + to_string((*knotenListe[5]).getZeitAttribut()) << endl;
+   cout << "zeiitattribut 6: " + to_string((*knotenListe[6]).getZeitAttribut()) << endl;
+   
+   graph* g = new graph(knotenListe);
 
-   cout << (*knoten)[0] << endl;
-   cout << (*knoten)[1] << endl;
+   cout << "graph erstellt" << endl;
+
+   for(int i = 0; i < size((*g).getKnotenMenge()); i++){
+
+      knoten v = *(*g).getKnotenMenge()[i];
+      cout << v.getId() << endl;
+   }
+
+   teilgraphenSet* tgSet = new teilgraphenSet(*g);
+   cout << "teilgraphenSet erstellt" << endl;
+   (*tgSet).erstelleTeilgraphenSet();
+
+  
+
 
   /* vector<vector<int>> teilgraphenKanten;
    vector<int> knoten;

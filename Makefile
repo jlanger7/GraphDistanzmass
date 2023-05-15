@@ -19,7 +19,7 @@ tests: progs
 
 progs:	main	
 
-main: src/main.cpp #src/zeitreihe.cpp tests/zeitreiheTest.cpp 
+main: src/knoten.cpp src/graph.cpp src/teilgraphenSet.cpp src/main.cpp #src/zeitreihe.cpp tests/zeitreiheTest.cpp 
 	g++ -o $@ $^ $(LDLIBS) 
 
 
