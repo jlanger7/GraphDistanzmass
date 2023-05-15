@@ -2,17 +2,24 @@
 #define GRAPH_H
 #include <vector>
 #include <set>
+#include "knoten.h"
 using namespace std;
 
-class Graph{
+class graph{
 
     private:
-    vector<int>* knoten;
-    vector<vector<int>*> knotenTeilgraphen;
-    vector<vector<vector<int>*>> knotenZhkTeilgraphen;
+    vector<knoten*> knotenMenge;
 
 
     public:
+    graph();
+    graph(vector<knoten*>& knotenMengeIn);
+
+    void addKnoten(knoten* knotenIn);
+    vector<knoten*>& getKnoten(){
+        return &knotenMenge;
+    };
+
 
 };
 
