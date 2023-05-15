@@ -19,7 +19,7 @@ tests: progs
 
 progs:	main	
 
-main: main.cpp
+main: src/main.cpp
 	g++ -o $@ $^ $(LDLIBS) 
 
 
