@@ -10,13 +10,13 @@ class knoten{
     int id;
     int zeitAttribut;
     int nrZHK = -1;
-    vector<knoten*> adjazenzListe; //enthält IDs der Nachbarknoten
+    vector<knoten> adjazenzListe; //enthält IDs der Nachbarknoten
 
 
     public:
     knoten();
     knoten(int idIn, int zeitAttributIn);
-    void addNachbarn(knoten* nachbar);
+    void addNachbarn(knoten& nachbar);
     
     void setId(int idIn){
         id = idIn;
@@ -30,10 +30,10 @@ class knoten{
     int getZeitAttribut(){
         return zeitAttribut;
     };
-    void setAdjazenzListe(vector<knoten*> adjazenzListeIn){
+    void setAdjazenzListe(vector<knoten>& adjazenzListeIn){
         adjazenzListe = adjazenzListeIn;
     };
-    vector<knoten*>& getAdjazenzListe(){
+    vector<knoten>& getAdjazenzListe(){
         return adjazenzListe;
     };
 

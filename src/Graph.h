@@ -8,15 +8,15 @@ using namespace std;
 class graph{
 
     private:
-    vector<knoten*> knotenMenge;
+    vector<knoten> knotenMenge;
 
 
     public:
     graph();
-    graph(vector<knoten*>& knotenMengeIn);
+    graph(vector<knoten>& knotenMengeIn);
 
-    void addKnoten(knoten* knotenIn);
-    vector<knoten*>& getKnotenMenge(){
+    void addKnoten(knoten& knotenIn);
+    vector<knoten>& getKnotenMenge(){
         return knotenMenge;
     };
 

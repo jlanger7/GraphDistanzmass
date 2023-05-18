@@ -24,7 +24,7 @@ int main()
 {
    cout << "Hello World" << endl;
 
-   vector<knoten*> knotenListe;
+   vector<knoten> knotenListe;
    for(int i = 0; i < 9; i++){
       
       int zeitAttribut = 0;
@@ -35,36 +35,36 @@ int main()
       }else if(i < 9){
          zeitAttribut = 3;
       }
-      knoten* v = new knoten(i, zeitAttribut);
+      knoten v(i, zeitAttribut);
       knotenListe.push_back(v);
    }
 
    cout << "Knotenliste erstellt" << endl;
    cout << size(knotenListe) << endl;
 
-   (*knotenListe[0]).addNachbarn(knotenListe[1]);
-   (*knotenListe[0]).addNachbarn(knotenListe[2]);
-   (*knotenListe[0]).addNachbarn(knotenListe[3]);
-   (*knotenListe[1]).addNachbarn(knotenListe[0]);
-   (*knotenListe[1]).addNachbarn(knotenListe[2]);
-   (*knotenListe[2]).addNachbarn(knotenListe[0]);
-   (*knotenListe[2]).addNachbarn(knotenListe[1]);
-   (*knotenListe[3]).addNachbarn(knotenListe[4]);
-   (*knotenListe[3]).addNachbarn(knotenListe[5]);
-   (*knotenListe[4]).addNachbarn(knotenListe[3]);
-   (*knotenListe[4]).addNachbarn(knotenListe[5]);
-   (*knotenListe[5]).addNachbarn(knotenListe[3]);
-   (*knotenListe[5]).addNachbarn(knotenListe[4]);
-   (*knotenListe[5]).addNachbarn(knotenListe[6]);
-   (*knotenListe[6]).addNachbarn(knotenListe[7]);
-   (*knotenListe[6]).addNachbarn(knotenListe[8]);
-   (*knotenListe[7]).addNachbarn(knotenListe[6]);
-   (*knotenListe[7]).addNachbarn(knotenListe[8]);
-   (*knotenListe[8]).addNachbarn(knotenListe[6]);
-   (*knotenListe[8]).addNachbarn(knotenListe[7]);
+   knotenListe[0].addNachbarn(knotenListe[1]);
+   knotenListe[0].addNachbarn(knotenListe[2]);
+   knotenListe[0].addNachbarn(knotenListe[3]);
+   knotenListe[1].addNachbarn(knotenListe[0]);
+   knotenListe[1].addNachbarn(knotenListe[2]);
+   knotenListe[2].addNachbarn(knotenListe[0]);
+   knotenListe[2].addNachbarn(knotenListe[1]);
+   knotenListe[3].addNachbarn(knotenListe[4]);
+   knotenListe[3].addNachbarn(knotenListe[5]);
+   knotenListe[4].addNachbarn(knotenListe[3]);
+   knotenListe[4].addNachbarn(knotenListe[5]);
+   knotenListe[5].addNachbarn(knotenListe[3]);
+   knotenListe[5].addNachbarn(knotenListe[4]);
+   knotenListe[5].addNachbarn(knotenListe[6]);
+   knotenListe[6].addNachbarn(knotenListe[7]);
+   knotenListe[6].addNachbarn(knotenListe[8]);
+   knotenListe[7].addNachbarn(knotenListe[6]);
+   knotenListe[7].addNachbarn(knotenListe[8]);
+   knotenListe[8].addNachbarn(knotenListe[6]);
+   knotenListe[8].addNachbarn(knotenListe[7]);
 
-   cout << "zeiitattribut 5: " + to_string((*knotenListe[5]).getZeitAttribut()) << endl;
-   cout << "zeiitattribut 6: " + to_string((*knotenListe[6]).getZeitAttribut()) << endl;
+   cout << "zeiitattribut 5: " + to_string(knotenListe[5].getZeitAttribut()) << endl;
+   cout << "zeiitattribut 6: " + to_string(knotenListe[6].getZeitAttribut()) << endl;
    
    graph* g = new graph(knotenListe);
 
@@ -72,7 +72,7 @@ int main()
 
    for(int i = 0; i < size((*g).getKnotenMenge()); i++){
 
-      knoten v = *(*g).getKnotenMenge()[i];
+      knoten v = (*g).getKnotenMenge()[i];
       cout << v.getId() << endl;
    }
 

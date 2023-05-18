@@ -8,12 +8,12 @@ graph::graph(){
 
 };
 
-graph::graph(vector<knoten*>& knotenMengeIn){
+graph::graph(vector<knoten>& knotenMengeIn){
 
     knotenMenge = knotenMengeIn;
 };
 
-void graph::addKnoten(knoten* knotenIn){
+void graph::addKnoten(knoten& knotenIn){
 
     knotenMenge.push_back(knotenIn);
 };
