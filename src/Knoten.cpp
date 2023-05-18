@@ -17,3 +17,8 @@ void knoten::addNachbarn(knoten* nachbar){
 
     adjazenzListe.push_back(nachbar);
 };
+
+void knoten::loescheNtesElementAusAdjazenzListe(int n){
+
+    adjazenzListe.erase(adjazenzListe.begin()+n);
+};

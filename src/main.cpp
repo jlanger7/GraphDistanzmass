@@ -15,13 +15,25 @@
 #include "../tests/zeitreiheTest.h"
 using namespace std;
 
-void test(vector<int>& z){
+void test(int* z){
    
-   cout << size(z) << endl;
+   int* i = z;
+   *i +=1 ; 
+   cout << *z << endl;
+   //z += 1;
 };
 
 int main()
 {
+
+
+
+
+/*
+   int a = 5;
+   test(&a);
+   cout << a << endl;
+*/
    cout << "Hello World" << endl;
 
    vector<knoten> knotenListe;
@@ -42,26 +54,29 @@ int main()
    cout << "Knotenliste erstellt" << endl;
    cout << size(knotenListe) << endl;
 
-   knotenListe[0].addNachbarn(knotenListe[1]);
-   knotenListe[0].addNachbarn(knotenListe[2]);
-   knotenListe[0].addNachbarn(knotenListe[3]);
-   knotenListe[1].addNachbarn(knotenListe[0]);
-   knotenListe[1].addNachbarn(knotenListe[2]);
-   knotenListe[2].addNachbarn(knotenListe[0]);
-   knotenListe[2].addNachbarn(knotenListe[1]);
-   knotenListe[3].addNachbarn(knotenListe[4]);
-   knotenListe[3].addNachbarn(knotenListe[5]);
-   knotenListe[4].addNachbarn(knotenListe[3]);
-   knotenListe[4].addNachbarn(knotenListe[5]);
-   knotenListe[5].addNachbarn(knotenListe[3]);
-   knotenListe[5].addNachbarn(knotenListe[4]);
-   knotenListe[5].addNachbarn(knotenListe[6]);
-   knotenListe[6].addNachbarn(knotenListe[7]);
-   knotenListe[6].addNachbarn(knotenListe[8]);
-   knotenListe[7].addNachbarn(knotenListe[6]);
-   knotenListe[7].addNachbarn(knotenListe[8]);
-   knotenListe[8].addNachbarn(knotenListe[6]);
-   knotenListe[8].addNachbarn(knotenListe[7]);
+   knotenListe[0].addNachbarn(&knotenListe[3]);
+   knotenListe[0].addNachbarn(&knotenListe[1]);
+   knotenListe[0].addNachbarn(&knotenListe[2]);
+   
+   knotenListe[1].addNachbarn(&knotenListe[0]);
+   knotenListe[1].addNachbarn(&knotenListe[2]);
+   knotenListe[2].addNachbarn(&knotenListe[0]);
+   knotenListe[2].addNachbarn(&knotenListe[1]);
+   knotenListe[3].addNachbarn(&knotenListe[0]);
+   knotenListe[3].addNachbarn(&knotenListe[4]);
+   knotenListe[3].addNachbarn(&knotenListe[5]);
+   knotenListe[4].addNachbarn(&knotenListe[3]);
+   knotenListe[4].addNachbarn(&knotenListe[5]);
+   knotenListe[5].addNachbarn(&knotenListe[3]);
+   knotenListe[5].addNachbarn(&knotenListe[4]);
+   knotenListe[5].addNachbarn(&knotenListe[6]);
+   knotenListe[6].addNachbarn(&knotenListe[5]);
+   knotenListe[6].addNachbarn(&knotenListe[7]);
+   knotenListe[6].addNachbarn(&knotenListe[8]);
+   knotenListe[7].addNachbarn(&knotenListe[6]);
+   knotenListe[7].addNachbarn(&knotenListe[8]);
+   knotenListe[8].addNachbarn(&knotenListe[6]);
+   knotenListe[8].addNachbarn(&knotenListe[7]);
 
    cout << "zeiitattribut 5: " + to_string(knotenListe[5].getZeitAttribut()) << endl;
    cout << "zeiitattribut 6: " + to_string(knotenListe[6].getZeitAttribut()) << endl;
@@ -76,11 +91,48 @@ int main()
       cout << v.getId() << endl;
    }
 
-   teilgraphenSet* tgSet = new teilgraphenSet(*g);
+   teilgraphenSet* tgSet = new teilgraphenSet(g);
    cout << "teilgraphenSet erstellt" << endl;
    (*tgSet).erstelleTeilgraphenSet();
 
-  
+   cout << "Nachbarn 1" << endl;
+   for(int i= 0; i < size(knotenListe[0].getAdjazenzListe()); i++){  
+      cout << (*knotenListe[0].getAdjazenzListe()[i]).getId() << endl;
+   }
+   cout << "Nachbarn 2" << endl;
+   for(int i= 0; i < size((*g).getKnotenMenge()[0].getAdjazenzListe()); i++){  
+      cout << (*(*g).getKnotenMenge()[0].getAdjazenzListe()[i]).getId() << endl;
+   }
+   cout << "Nachbarn 3" << endl;
+   for(int i= 0; i < size((*(*tgSet).getTeilgraphen()[0]).getKnotenMenge()[1].getAdjazenzListe()); i++){ 
+      cout << "Eigene ID: " + to_string((*(*tgSet).getTeilgraphen()[0]).getKnotenMenge()[0].getId()) << endl;
+      cout << (*(*(*tgSet).getTeilgraphen()[0]).getKnotenMenge()[0].getAdjazenzListe()[i]).getId() << endl;
+   }
+   cout << (*(*tgSet).getTeilgraphen()[0]).getKnotenMenge()[0].name << endl;
+   (*(*tgSet).getTeilgraphen()[0]).getKnotenMenge()[0].loescheNtesElementAusAdjazenzListe(1);
+   cout << "Nachbarn 3" << endl;
+   for(int i= 0; i < 5; i++){ 
+      cout << "Eigene ID: " + to_string((*(*tgSet).getTeilgraphen()[0]).getKnotenMenge()[0].getId()) << endl;
+      cout << (*(*(*tgSet).getTeilgraphen()[0]).getKnotenMenge()[0].getAdjazenzListe()[i]).getId() << endl;
+   }
+   
+
+   for(int i = 0; i < size((*tgSet).getTeilgraphen()); i++){
+
+      cout << "Teilgraph nr: " + to_string(i+1) << endl;
+
+      for(int z = 0; z < size((*(*tgSet).getTeilgraphen()[i]).getKnotenMenge()); z++){
+         
+         cout << "   KnotenId: " + to_string((*(*tgSet).getTeilgraphen()[i]).getKnotenMenge()[z].getId()) << endl;
+         cout << "   KnotenZeit: " + to_string((*(*tgSet).getTeilgraphen()[i]).getKnotenMenge()[z].getZeitAttribut()) << endl;
+      }
+      /*(*(*tgSet).getTeilgraphen()[i]).modifizierteTiefensuche();
+      cout << "Anzahl Zhks" + to_string((*(*tgSet).getTeilgraphen()[i]).getAnzahlZhk()) << endl;
+      cout << "MaxVZhk" + to_string((*(*tgSet).getTeilgraphen()[i]).getMaxVZhk()) << endl;
+      cout << "MinVZhk" + to_string((*(*tgSet).getTeilgraphen()[i]).getMinVZhk()) << endl;*/
+   }
+
+
 
 
   /* vector<vector<int>> teilgraphenKanten;

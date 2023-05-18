@@ -9,14 +9,15 @@ class knoten{
     private:
     int id;
     int zeitAttribut;
-    int nrZHK = -1;
-    vector<knoten> adjazenzListe; //enthält IDs der Nachbarknoten
+    int zhkNr = -1;
+    vector<knoten*> adjazenzListe; //enthält IDs der Nachbarknoten
 
 
     public:
+    string name = "leer";
     knoten();
     knoten(int idIn, int zeitAttributIn);
-    void addNachbarn(knoten& nachbar);
+    void addNachbarn(knoten* nachbar);
     
     void setId(int idIn){
         id = idIn;
@@ -30,12 +31,19 @@ class knoten{
     int getZeitAttribut(){
         return zeitAttribut;
     };
-    void setAdjazenzListe(vector<knoten>& adjazenzListeIn){
+    void setZhkNr(int zhkNrIn){
+        zhkNr = zhkNrIn;
+    };
+    int getZhkNr(){
+        return zhkNr;
+    };
+    void setAdjazenzListe(vector<knoten*> adjazenzListeIn){
         adjazenzListe = adjazenzListeIn;
     };
-    vector<knoten>& getAdjazenzListe(){
+    vector<knoten*>& getAdjazenzListe(){
         return adjazenzListe;
     };
+    void loescheNtesElementAusAdjazenzListe(int n);
 
 
 
