@@ -9,7 +9,7 @@ using namespace std;
 class teilgraphenSet{
 
     private:
-    vector<graph*> teilgraphen;
+    vector<graph> teilgraphen;
     graph* gesamtGraph;
     int anzahlTeilgraphen;
 
@@ -21,7 +21,7 @@ class teilgraphenSet{
     int getAnzahlTeilgraphen(){
         return anzahlTeilgraphen;
     };
-    vector<graph*>& getTeilgraphen(){
+    vector<graph>& getTeilgraphen(){
         return teilgraphen;
     };
 

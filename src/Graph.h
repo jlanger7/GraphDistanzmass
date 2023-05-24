@@ -8,22 +8,22 @@ using namespace std;
 class graph{
 
     private:
-    vector<knoten> knotenMenge;
+    vector<knoten*> knotenMenge;
     int anzahlZhk;
     int maxVZhk;
     int minVZhk;
-    vector<vector<knoten>> zhkKnotenMengen;
+    vector<vector<knoten*>> zhkKnotenMengen;
 
 
     public:
     string name = "leer";
     graph();
-    graph(vector<knoten>& knotenMengeIn);
-    void addKnoten(knoten& knotenIn);
+    graph(vector<knoten*>& knotenMengeIn);
+    void addKnoten(knoten* knotenIn);
     void modifizierteTiefensuche();
-    void durchsucheNachbarn(knoten& v, vector<knoten>& adjazenzListe, int &aktNrZhks, int &tmpNrV);
+    void durchsucheNachbarn(knoten& v, vector<knoten*>& adjazenzListe, int &aktNrZhks, int &tmpNrV);
 
-    vector<knoten>& getKnotenMenge(){
+    vector<knoten*>& getKnotenMenge(){
         return knotenMenge;
     };
     int getAnzahlZhk(){
