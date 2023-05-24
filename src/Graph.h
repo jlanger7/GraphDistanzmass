@@ -16,7 +16,6 @@ class graph{
 
 
     public:
-    string name = "leer";
     graph();
     graph(vector<knoten*>& knotenMengeIn);
     void addKnoten(knoten* knotenIn);

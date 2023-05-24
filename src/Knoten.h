@@ -14,7 +14,6 @@ class knoten{
 
 
     public:
-    string name = "leer";
     knoten();
     knoten(int idIn, int zeitAttributIn);
     void addNachbarn(knoten* nachbar);

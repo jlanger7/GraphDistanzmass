@@ -1,78 +1,29 @@
 #include "zeitreihe.h"
+#include "teilgraphenSet.h"
 #include <vector>
 #include <iostream>
 using namespace std;
 
 
-zeitreihe::zeitreihe(vector<int>& knoten, vector<int>& kanten){
+zeitreihe::zeitreihe(teilgraphenSet* teilgraphenIn){
 
-    //Graph zu Teilgraphen
-    erstelleTeilgraphenSet(knoten, kanten);
+    for(int i = 0; i < (*teilgraphenIn).getAnzahlTeilgraphen(); i++){
 
-    //ZHK der Teilgraphen finden
-        //Tiefensuche
-            //DurchsucheNachbarn
-    
-    //Zeitreihe erstellen -> entweder ZHK noch analysieren, oder alle Werte werden mit ZHK bereits geliefert
-};
-
-//Input: G(knoten,kanten), Index in knoten gibt ID der Knoten an, tatsächlich gespeicherter int das Zeitattribut. Erste Kante besteht aus (kanten[0], kanten[1]) etc.
-//Result: Teilknoten- und kantenmengen der einzelnen Teilgraphen, aufgeteilt nach Zeitattribut der Knoten. Die Teilknotenmengen sind als Vector bestehend aus T sets mit den 
-//  entsprechenden Knoten gespeichert, wobei T die Anzahl der verschiedenen Zeitattribute in G ist. Die Teilkantenmengen sind als Vector bestehend aus T Vectoren mit den entsprechenden
-//  Kanten gespeichert. 
-void zeitreihe::erstelleTeilgraphenSet(vector<int>& knoten, vector<int>& kanten){
-
-    int aktMaxZeitattribut = 0;
-
-    for(int e = 0; e < size(kanten); e+=2){
-
-        //für Kante (u,v): t(u) = knoten[kanten[e]]; t(v) = knoten[kanten[e+1]]
-
-        //wird ein neues maximales Zeitattribut gefunden, dann füge den Teilgraph Knoten- und Kantensets genügend subsets hinzu, damit es genau aktMaxZeitattribut Knoten- und Kantensets gibt  
-        if(knoten[kanten[e]] > aktMaxZeitattribut || knoten[kanten[e+1]] > aktMaxZeitattribut){
-
-            int maxTmp = max(knoten[kanten[e]], knoten[kanten[e+1]]);
-            int differenz = maxTmp - aktMaxZeitattribut;
-            aktMaxZeitattribut = maxTmp;
-
-            for(int i = 0; i < differenz; i++){
-
-                set<int> s;
-                teilgraphenKnoten.push_back(s);
-                vector<int> v;
-                teilgraphenKanten.push_back(v);
-            }
-        }
-
-        //wenn Knoten u = kanten[e] und Knoten v = kanten[e+1] über dasselbe Zeitattribut vefügen, dann fügen sie dem entsprechenden Teilgraphen nr. "aktZeitattribut" hinzu. 
-        //Da aktZeitattribut als Index benutzt wird, wird dieser bei insert und push_back um 1 reduziert.  
-        if(knoten[kanten[e]] == knoten[kanten[e+1]]){
-
-            int aktZeitAttribut = knoten[kanten[e]];
-            teilgraphenKnoten[aktZeitAttribut-1].insert(kanten[e]);
-            teilgraphenKnoten[aktZeitAttribut-1].insert(kanten[e+1]);
-            teilgraphenKanten[aktZeitAttribut-1].push_back(kanten[e]);
-            teilgraphenKanten[aktZeitAttribut-1].push_back(kanten[e+1]);
-        }
-
+        vector<int> vecTmp;
+        vecTmp.push_back((*teilgraphenIn).getTeilgraphen()[i].getAnzahlZhk());
+        vecTmp.push_back((*teilgraphenIn).getTeilgraphen()[i].getMaxVZhk());
+        vecTmp.push_back((*teilgraphenIn).getTeilgraphen()[i].getMinVZhk());
+        zeitreihenWerte.push_back(vecTmp);
     }
-    anzahlTeilgraphen = aktMaxZeitattribut;
 };
 
-void zeitreihe::printTeilgraphKnotenUndKanten(){
+void zeitreihe::printZeitreihe(){
 
-    for(int i = 0; i < size(teilgraphenKnoten); i++){
+    for(int i = 0; i < size(zeitreihenWerte); i++){
 
-        cout << "Teilgraph Nr.: " + to_string(i+1) << endl;
-        cout << "   Knoten: " << endl;
-        set<int, greater<int> >::iterator itr;
-        for(itr = teilgraphenKnoten[i].begin(); itr != teilgraphenKnoten[i].end(); itr++) {
-                cout << "   " << *itr << " ";
-        }
-        cout << "   Kanten: " << endl;
-        for(int e = 0; e < size(teilgraphenKanten[i]); e+=2){
-
-            cout << "   (" + to_string(teilgraphenKanten[i][e]) + "," + to_string(teilgraphenKanten[i][e+1]) + ")" << endl;
-        }
+        cout << "Zeitreihenschritt nr: " + to_string(i) << endl;
+        cout << "   AnzahlZhk: " + to_string(zeitreihenWerte[i][0]) << endl;
+        cout << "   MaxV: " + to_string(zeitreihenWerte[i][1]) << endl;
+        cout << "   MinV: " + to_string(zeitreihenWerte[i][2]) << endl;
     }
 };

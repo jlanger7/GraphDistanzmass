@@ -32,7 +32,6 @@ void teilgraphenSet::erstelleTeilgraphenSet(){
             for(int i = 0; i < differenz; i++){
 
                 graph teilgraph;
-                teilgraph.name = "Teilgraph Nr: " + to_string(zeitAttributAktKnoten);
                 teilgraphen.push_back(teilgraph);
                 /*
                 cout << "Teilgraph fuer Te: " + to_string(zeitAttributAktKnoten) << endl;
@@ -40,7 +39,6 @@ void teilgraphenSet::erstelleTeilgraphenSet(){
             }
         }
         teilgraphen[zeitAttributAktKnoten-1].addKnoten(aktKnoten);
-        cout << teilgraphen[zeitAttributAktKnoten-1].name << endl;
         for(int n = 0; n < size((*aktKnoten).getAdjazenzListe()); n++){
 
             if(!((*(*aktKnoten).getAdjazenzListe()[n]).getZeitAttribut() == zeitAttributAktKnoten)){
@@ -59,6 +57,7 @@ void teilgraphenSet::erstelleTeilgraphenSet(){
             }
         }
     }
+    anzahlTeilgraphen = aktMaxZeitattribut;
     /*
     for(int k = 0; k < size((*teilgraphen[0].getKnotenMenge()[0]).getAdjazenzListe()); k++){
         cout << "Nachbar Test: " + to_string((*(*teilgraphen[0].getKnotenMenge()[0]).getAdjazenzListe()[k]).getId()) << endl;

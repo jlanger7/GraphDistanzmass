@@ -14,8 +14,6 @@ graph::graph(vector<knoten*>& knotenMengeIn){
 };
 void graph::modifizierteTiefensuche(){
 
-    cout << "starte Tiefensuche fuer Graph mit Name: " + name << endl;
-
     int aktNrZhks = 0, tmpMaxV = 0, tmpMinV = 0;
     for(int v = 0; v < size(knotenMenge); v++){
         
