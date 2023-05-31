@@ -15,11 +15,11 @@ class zeitreihe{
     zeitreihe();
     zeitreihe(teilgraphenSet* teilgraphenIn);
     void printZeitreihe();
-    int berechneDiskreteFrechetDistanzND(vector<vector<int>> q);
-    int berechneDiskreteFrechetDistanzFunktionswertND(vector<vector<int>> q, int** caIn, int i , int j);
-    int berechneDtwDistanzND(vector<vector<int>> q);
-    int berechneDtwDistanzFunktionswertND(vector<vector<int>> q, int** caIn, int i , int j);
-    int canberraDistance(vector<int> p, vector<int> q);
+    float berechneDiskreteFrechetDistanzND(vector<vector<int>> q);
+    float berechneDiskreteFrechetDistanzFunktionswertND(vector<vector<int>> q, float** caIn, int i , int j);
+    float berechneDtwDistanzND(vector<vector<int>> q);
+    float berechneDtwDistanzFunktionswertND(vector<vector<int>> q, float** caIn, int i , int j);
+    float canberraDistance(vector<int> p, vector<int> q);
     int berechneDiskreteFrechetDistanz1D(vector<vector<int>> q, int attribut);
     int berechneDiskreteFrechetDistanzFunktionswert1D(vector<vector<int>> q, int** caIn, int i , int j, int attribut);
     int berechneDtwDistanz1D(vector<vector<int>> q, int attribut);

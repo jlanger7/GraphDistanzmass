@@ -49,8 +49,8 @@ int main(){
     qvec.push_back(ivec);
     q.setZeitreihenWerte(qvec);
 
-    cout << p.berechneDiskreteFrechetDistanz(q.getZeitreihenWerte()) << endl;
-    cout << p.berechneDtwDistanz(q.getZeitreihenWerte()) << endl;
+    cout << p.berechneDiskreteFrechetDistanz1D(q.getZeitreihenWerte(),0) << endl;
+    cout << p.berechneDtwDistanz1D(q.getZeitreihenWerte(),0) << endl;
 
     return 0;
 }
