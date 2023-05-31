@@ -15,11 +15,16 @@ class zeitreihe{
     zeitreihe();
     zeitreihe(teilgraphenSet* teilgraphenIn);
     void printZeitreihe();
-    int berechneDiskreteFrechetDistanz(vector<vector<int>> q);
-    int berechneDiskreteFrechetDistanzFunktionswert(vector<vector<int>> q, int** caIn, int i , int j);
-    int berechneDtwDistanz(vector<vector<int>> q);
-    int berechneDtwDistanzFunktionswert(vector<vector<int>> q, int** caIn, int i , int j);
-    int d(vector<int> p, vector<int> q);
+    int berechneDiskreteFrechetDistanzND(vector<vector<int>> q);
+    int berechneDiskreteFrechetDistanzFunktionswertND(vector<vector<int>> q, int** caIn, int i , int j);
+    int berechneDtwDistanzND(vector<vector<int>> q);
+    int berechneDtwDistanzFunktionswertND(vector<vector<int>> q, int** caIn, int i , int j);
+    int canberraDistance(vector<int> p, vector<int> q);
+    int berechneDiskreteFrechetDistanz1D(vector<vector<int>> q, int attribut);
+    int berechneDiskreteFrechetDistanzFunktionswert1D(vector<vector<int>> q, int** caIn, int i , int j, int attribut);
+    int berechneDtwDistanz1D(vector<vector<int>> q, int attribut);
+    int berechneDtwDistanzFunktionswert1D(vector<vector<int>> q, int** caIn, int i , int j, int attribut);
+    int d(vector<int> p, vector<int> q, int attribut);
     void setZeitreihenWerte(vector<vector<int>> in){
         zeitreihenWerte = in;
     };
