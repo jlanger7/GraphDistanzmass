@@ -2,6 +2,7 @@
 #include <iostream>
 #include "knoten.h"
 #include "graph.h"
+#include "txtFileInterface.h"
 using namespace std;
 
 graph::graph(){
@@ -59,4 +60,40 @@ void graph::durchsucheNachbarn(knoten& v, vector<knoten*>& adjazenzListe, int &a
 void graph::addKnoten(knoten* knotenIn){
 
     knotenMenge.push_back(knotenIn);
+};
+
+void graph::berechneKanten(txtFileInterface txt){
+
+    int nrTotalVertices = size(knotenMenge);
+
+    for(int v = 0; v < nrTotalVertices-1; v++){
+
+        if(v%250000 == 0){
+            std::cout << "addEdges, betrachte Knoten nr: " + to_string(v) << endl;
+        }
+
+        int gridId = (*knotenMenge[v]).getId();
+
+        int* coordinates = txt.calculateCoordinates(gridId);
+        int timeStep = *(coordinates + 0);
+        int x = *(coordinates + 1);
+        int y = *(coordinates + 2);
+
+        int potNeighbor = v + 1;
+        int gridIdPotNeighbor = (*knotenMenge[potNeighbor]).getId();
+       
+        while((gridIdNeighbor - gridId) <= ((txt.getDimX()*txt.getDimY())+txt.getDimX()) && potNeighbor < nrTotalVertices){
+
+            if(gridIdNeighbor == txt.calculateGridId(timeStep,x,y+1) || 
+                gridIdNeighbor == txt.calculateGridId(timeStep,x+1,y) ||
+                    gridIdNeighbor == txt.calculateGridId(timeStep+1,x,y)){
+
+                        (*knotenMenge[v]).addNachbarn(knotenMenge[potNeighbor]);
+                        (*knotenMenge[potNeighbor]).addNachbarn(knotenMenge[v]);
+                }
+            potNeighbor += 1; 
+            gridIdNeighbor = (*knotenMenge[potNeighbor]).getId();
+        }
+        delete[] coordinates;
+    }
 };

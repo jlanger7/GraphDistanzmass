@@ -21,6 +21,7 @@ class graph{
     void addKnoten(knoten* knotenIn);
     void modifizierteTiefensuche();
     void durchsucheNachbarn(knoten& v, vector<knoten*>& adjazenzListe, int &aktNrZhks, int &tmpNrV);
+    void berechneKanten(txtFileInterface txt);
 
     vector<knoten*>& getKnotenMenge(){
         return knotenMenge;
