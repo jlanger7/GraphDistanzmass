@@ -17,8 +17,8 @@ teilgraphenSet::teilgraphenSet(graph* inputGraph){
 
 void teilgraphenSet::erstelleTeilgraphenSet(){
 
-    int aktMaxZeitattribut = 0;
     vector<knoten*> gesamtKnotenMenge = (*gesamtGraph).getKnotenMenge();
+    int aktMaxZeitattribut = 0;
 
     for(int v = 0; v < size(gesamtKnotenMenge); v++){
         
@@ -42,7 +42,7 @@ void teilgraphenSet::erstelleTeilgraphenSet(){
         for(int n = 0; n < size((*aktKnoten).getAdjazenzListe()); n++){
 
             if(!((*(*aktKnoten).getAdjazenzListe()[n]).getZeitAttribut() == zeitAttributAktKnoten)){
-                cout << "loesche: " + to_string((*(*aktKnoten).getAdjazenzListe()[n]).getId()) + " von Knoten: " + to_string((*aktKnoten).getId()) << endl;
+                //cout << "loesche: " + to_string((*(*aktKnoten).getAdjazenzListe()[n]).getId()) + " von Knoten: " + to_string((*aktKnoten).getId()) << endl;
                 //(*aktKnotenNeu).getAdjazenzListe().erase((*aktKnotenNeu).getAdjazenzListe().begin()+n);
                 (*aktKnoten).loescheNtesElementAusAdjazenzListe(n);
                 //Hier könnte man noch verlorene Kante abspeichern, falls man die noch benutzen möchte

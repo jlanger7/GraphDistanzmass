@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include "knoten.h"
+#include "graph.h"
 
 class txtFileInterface{
 
@@ -16,6 +17,7 @@ class txtFileInterface{
     int getTimeStep(int gridId);
     int* calculateCoordinates(int gridId);
     std::vector<knoten*> readInNodes(std::string dateiPfad);
+    void berechneKanten(vector<knoten*>* knotenListe);
 
     int calculateGridId(int t, int x, int y){
         return (y + (x*dimY) + (t*dimX*dimY));

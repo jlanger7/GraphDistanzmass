@@ -3,6 +3,7 @@
 #include <iostream>
 #include "txtFileInterface.h"
 #include "knoten.h"
+#include "graph.h"
 using namespace std;
 
 txtFileInterface::txtFileInterface(){
@@ -60,6 +61,7 @@ vector<knoten*> txtFileInterface::readInNodes(string dateiPfad){
     int dbz, gridId;
     int i = 0;
     int offset = 0;
+    int timeStepOffset = 0;
     vector<knoten*> knotenListe;
 
     while(file >> number) {
@@ -81,16 +83,58 @@ vector<knoten*> txtFileInterface::readInNodes(string dateiPfad){
             gridId = number;
             int timeStep = getTimeStep(gridId);
             nrIsDbzValue = true;
-            //if(i == 1){
+            if(i == 1){
             //offset = gridId;
-            //}
+            timeStepOffset = getTimeStep(gridId) - 1;
+            }
         
         gridId = gridId - offset;
-        knoten* v = new knoten(gridId, timeStep);
+        knoten* v = new knoten(gridId, timeStep-timeStepOffset);
         knotenListe.push_back(v);
         }
     }
    
    file.close();
    return knotenListe;
+};
+
+void txtFileInterface::berechneKanten(vector<knoten*>* knotenListe){
+
+    int nrTotalVertices = size((*knotenListe));
+    for(int v = 0; v < nrTotalVertices-1; v++){
+
+        if(v%10000 == 0){
+            std::cout << "addEdges, betrachte Knoten nr: " + to_string(v) << endl;
+        }
+
+        int gridId = (*(*knotenListe)[v]).getId();
+        //std::cout << "was here: " + to_string(__LINE__) << endl;
+
+        int* coordinates = calculateCoordinates(gridId);
+        int timeStep = *(coordinates + 0);
+        int x = *(coordinates + 1);
+        int y = *(coordinates + 2);
+
+        int potNeighbor = v + 1;
+        int gridIdPotNeighbor = (*(*knotenListe)[potNeighbor]).getId();
+       
+        while((gridIdPotNeighbor - gridId) <= ((dimX*dimY)+dimX) && potNeighbor < nrTotalVertices){
+
+            gridIdPotNeighbor = (*(*knotenListe)[potNeighbor]).getId();
+            if(gridIdPotNeighbor == calculateGridId(timeStep,x,y+1) || 
+                gridIdPotNeighbor == calculateGridId(timeStep,x+1,y) ||
+                    gridIdPotNeighbor == calculateGridId(timeStep+1,x,y)){
+
+                        if(v == 0){
+                            std::cout << "gridIdPotNeighbor: " + to_string(gridIdPotNeighbor) << endl;
+                            std::cout << "Te: " + to_string(timeStep) + " ex: " + to_string(x) + " ey: " + to_string(y) << endl;
+                            }
+
+                        (*(*knotenListe)[v]).addNachbarn((*knotenListe)[potNeighbor]);
+                        (*(*knotenListe)[potNeighbor]).addNachbarn((*knotenListe)[v]);
+                }
+            potNeighbor += 1; 
+        }
+        delete[] coordinates;
+    }
 };

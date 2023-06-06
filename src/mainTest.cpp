@@ -90,6 +90,19 @@ int main()
    teilgraphenSet* tgSet = new teilgraphenSet(g);
    (*tgSet).erstelleTeilgraphenSet();
 
+
+   for(int i = 0; i < size(knotenListe1); i++){
+
+      if((*(*g1).getKnotenMenge()[i]).getId() == 117682039){
+         cout << "   ID Nachbar: " + to_string( (*(*(*g1).getKnotenMenge()[i]).getAdjazenzListe()[0]).getId() ) << endl;
+         cout << "   ID Nachbar: " + to_string( (*(*(*g1).getKnotenMenge()[i]).getAdjazenzListe()[1]).getId() ) << endl;
+         cout << "   ID Nachbar: " + to_string( (*(*(*g1).getKnotenMenge()[i]).getAdjazenzListe()[2]).getId() ) << endl;
+         cout << "   ID Nachbar: " + to_string( (*(*(*g1).getKnotenMenge()[i]).getAdjazenzListe()[3]).getId() ) << endl;
+         cout << "   ID Nachbar: " + to_string( (*(*(*g1).getKnotenMenge()[i]).getAdjazenzListe()[4]).getId() ) << endl;
+
+      }
+   }
+
    /*
    cout << "Nachbarn 3" << endl;
    cout << "Eigene ID: " + to_string((*(*tgSet).getTeilgraphen()[0].getKnotenMenge()[0]).getId()) << endl;
