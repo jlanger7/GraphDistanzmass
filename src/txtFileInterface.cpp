@@ -100,6 +100,8 @@ vector<knoten*> txtFileInterface::readInNodes(string dateiPfad){
 
 void txtFileInterface::berechneKanten(vector<knoten*>* knotenListe){
 
+    int kantenZ = 0;
+
     int nrTotalVertices = size((*knotenListe));
     for(int v = 0; v < nrTotalVertices-1; v++){
 
@@ -121,20 +123,31 @@ void txtFileInterface::berechneKanten(vector<knoten*>* knotenListe){
         while((gridIdPotNeighbor - gridId) <= ((dimX*dimY)+dimX) && potNeighbor < nrTotalVertices){
 
             gridIdPotNeighbor = (*(*knotenListe)[potNeighbor]).getId();
+
+            if(v == 1 && potNeighbor == 2){
+                std::cout << "gridIdV: " + to_string(gridId) << endl;
+                std::cout << "NrPotNeighbor: " + to_string(potNeighbor) << endl;
+                std::cout << "gridIdPotNeighbor: " + to_string(gridIdPotNeighbor) << endl;
+                std::cout << "Te: " + to_string(timeStep) + " ex: " + to_string(x) + " ey: " + to_string(y) << endl;
+                std::cout << "berID1: " + to_string(calculateGridId(timeStep,x,y+1))  << endl;
+                std::cout << "berID2: " + to_string(calculateGridId(timeStep,x+1,y))  << endl;
+                }
             if(gridIdPotNeighbor == calculateGridId(timeStep,x,y+1) || 
                 gridIdPotNeighbor == calculateGridId(timeStep,x+1,y) ||
                     gridIdPotNeighbor == calculateGridId(timeStep+1,x,y)){
 
-                        if(v == 0){
-                            std::cout << "gridIdPotNeighbor: " + to_string(gridIdPotNeighbor) << endl;
+                        if(v == 1){
+                            std::cout << "ADDEN gridIdPotNeighbor: " + to_string(gridIdPotNeighbor) << endl;
                             std::cout << "Te: " + to_string(timeStep) + " ex: " + to_string(x) + " ey: " + to_string(y) << endl;
                             }
 
                         (*(*knotenListe)[v]).addNachbarn((*knotenListe)[potNeighbor]);
                         (*(*knotenListe)[potNeighbor]).addNachbarn((*knotenListe)[v]);
+                        kantenZ += 1;
                 }
             potNeighbor += 1; 
         }
         delete[] coordinates;
     }
+    std::cout << "Anzahl kanten: " + to_string(kantenZ) << endl;
 };
