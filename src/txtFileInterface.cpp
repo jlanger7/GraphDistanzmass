@@ -1,13 +1,31 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <filesystem>
 #include "txtFileInterface.h"
 #include "knoten.h"
 #include "graph.h"
 using namespace std;
+using std::filesystem::directory_iterator;
 
 txtFileInterface::txtFileInterface(){
 
+};
+
+vector<string> txtFileInterface::getGraphdatenDateinamen(string ordnerPfad){
+
+    vector<string> dateiNamen;
+    int z = 0;
+    for (const auto & file: directory_iterator(ordnerPfad)) { 
+
+        //string dateiPfad(file.path().generic_string());
+        string dateiName(file.path().filename().generic_string());
+        dateiNamen.push_back(dateiName);
+        cout << "Graph Nr. " + to_string(z) + " represents: " + dateiNamen[z] << endl;
+        z += 1;
+    }
+    
+    return dateiNamen;
 };
 
 int txtFileInterface::getTimeStep(int gridId){

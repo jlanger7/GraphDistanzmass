@@ -18,7 +18,7 @@ class txtFileInterface{
     int* calculateCoordinates(int gridId);
     std::vector<knoten*> readInNodes(std::string dateiPfad);
     void berechneKanten(vector<knoten*>* knotenListe);
-
+    vector<string> getGraphdatenDateinamen(string ordnerPfad);
     int calculateGridId(int t, int x, int y){
         return (y + (x*dimY) + (t*dimX*dimY));
     }

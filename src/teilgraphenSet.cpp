@@ -13,6 +13,7 @@ teilgraphenSet::teilgraphenSet(){
 teilgraphenSet::teilgraphenSet(graph* inputGraph){
 
     gesamtGraph = inputGraph;
+    erstelleTeilgraphenSet();
 };
 
 void teilgraphenSet::erstelleTeilgraphenSet(){
