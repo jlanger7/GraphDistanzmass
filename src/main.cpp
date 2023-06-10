@@ -13,6 +13,7 @@
 #include "graph.h"
 #include "teilgraphenSet.h"
 #include "zeitreihe.h"
+#include "cluster.h"
 #include "../tests/zeitreiheTest.h"
 using namespace std;
 
@@ -20,6 +21,25 @@ string graphDatenOrdnerPfad = "C:\\Users\\Jonathan Langer\\Desktop\\SHK Job\\VS 
 
 int main(){
 
+   vector<vector<int>> matrix{
+      {0,1,6,7},
+      {1,0,5,7},
+      {6,5,0,1},
+      {7,7,1,0},
+   };
+
+   cluster c(&matrix);
+
+   vector<int> medoids = c.initPAM(2);
+   
+   cout << medoids[0] << endl;
+   cout << medoids[1] << endl;
+
+
+
+
+   return 0;
+   
    txtFileInterface txt;
 
    vector<string> graphDateien = txt.getGraphdatenDateinamen(graphDatenOrdnerPfad);
