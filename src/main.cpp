@@ -25,8 +25,12 @@ int main(){
    vector<string> graphDateien = txt.getGraphdatenDateinamen(graphDatenOrdnerPfad);
    cout << "Anzahl Graphdateien im Ordner: " + to_string(size(graphDateien)) << endl;
    
-   int distanzMatrixNrZHK[size(graphDateien)][size(graphDateien)];
-   int distanzMatrixMaxZHK[size(graphDateien)][size(graphDateien)];
+   vector<vector<int>> distanzMatrixNrZHK(size(graphDateien));
+   vector<vector<int>> distanzMatrixMaxZHK(size(graphDateien));
+   for(int i = 0; i < size(graphDateien); i++){
+      distanzMatrixNrZHK[i] = vector<int>(size(graphDateien));
+      distanzMatrixMaxZHK[i] = vector<int>(size(graphDateien));
+   }
 
    //Vergleiche jeden Graphen aus dem Inputdaten-Ordner...
    for(int i = 0; i < size(graphDateien); i++){
@@ -76,15 +80,15 @@ int main(){
       }
    }
    cout << "Distanzen Anzahl ZHK" << endl;
-   for(int i = 0; i < sizeof(distanzMatrixNrZHK); i++){
-      for(int j = 0; j < sizeof(distanzMatrixNrZHK[i]); j++){
+   for(int i = 0; i < size(distanzMatrixNrZHK); i++){
+      for(int j = 0; j < size(distanzMatrixNrZHK[i]); j++){
 
          cout << to_string(i) + " zu " + to_string(j) + " = " + to_string(distanzMatrixNrZHK[i][j]) << endl;
       }
    }
    cout << "Distanzen Max. ZHK" << endl;
-   for(int i = 0; i < sizeof(distanzMatrixMaxZHK); i++){
-      for(int j = 0; j < sizeof(distanzMatrixMaxZHK[i]); j++){
+   for(int i = 0; i < size(distanzMatrixMaxZHK); i++){
+      for(int j = 0; j < size(distanzMatrixMaxZHK[i]); j++){
 
          cout << to_string(i) + " zu " + to_string(j) + " = " + to_string(distanzMatrixMaxZHK[i][j]) << endl;
       }
