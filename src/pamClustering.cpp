@@ -3,12 +3,13 @@
 #include "pamClustering.h"
 using namespace std;
 
-pamClustering::pamClustering(vector<vector<int>>* distanzMatrixIn){
+pamClustering::pamClustering(vector<vector<int>>* distanzMatrixIn, int kIn){
 
     distanzMatrix = distanzMatrixIn;
+    k = kIn;
 };
 
-vector<int> pamClustering::init(int k){
+void pamClustering::init(){
 
     //----------------suche erstes init medoid------------
     //init tmp variablen
@@ -81,7 +82,6 @@ vector<int> pamClustering::init(int k){
             cout << "Objekt: " + to_string(nichtSelektierteObjekte[z])<< endl;
         }
     }
-    return medoids;
 };
 
 int pamClustering::getDistanzZumNaechstenGewaehltenMedoid(int objekt){
@@ -94,70 +94,94 @@ int pamClustering::getDistanzZumNaechstenGewaehltenMedoid(int objekt){
             tmpMin = (*distanzMatrix)[objekt][medoids[i]];
         }
     }
-    cout << "Distanz von Objekt " + to_string(objekt) + " zu medoid: " + to_string(tmpMin)<< endl;
+    //cout << "Distanz von Objekt " + to_string(objekt) + " zu medoid: " + to_string(tmpMin)<< endl;
     return tmpMin;
 };
 
-vector<int> pamClustering::clustering(){
+vector<int> pamClustering::berechneClustering(){
 
+    init();
+    cout << "init abgeschlossen" << endl;
     bool konvergiert = false;
     while(!konvergiert){
-
+        cout << "Durchlauf while" << endl;
         int minKosten;
         int minI;
         int minH;
         for(int i = 0; i < size(medoids); i++){
+            
+            cout << "berechneClustering for medoid nr: " + to_string(i) + " objekt: " + to_string(medoids[i]) << endl;
+            cout << "noch nicht gewaehlte objekte jetzt: " << endl;
+            for(int z = 0; z < size(nichtSelektierteObjekte); z++){
+                cout << "Objekt: " + to_string(nichtSelektierteObjekte[z])<< endl;
+            }
+            cout << "medoids objekte jetzt: " << endl;
+            for(int z = 0; z < size(medoids); z++){
+                cout << "Objekt: " + to_string(medoids[z])<< endl;
+            }
+
             for(int h = 0; h < size(nichtSelektierteObjekte); h++){
 
+                cout << "   ha: " + to_string(h) << endl;
                 int sumTauschIH = 0;
                 for(int j = 0; j < size(nichtSelektierteObjekte); j++){
-                    
+                    cout << "   jot: " + to_string(j) << endl;
                     int c;
                     int maxDistanzZuEinemAnderenMedoid = getDistanzZumWeitestenGewaehltenMedoidAusserI(nichtSelektierteObjekte[j], medoids[i]);
                     if((*distanzMatrix)[nichtSelektierteObjekte[j]][nichtSelektierteObjekte[h]] > maxDistanzZuEinemAnderenMedoid && 
                             (*distanzMatrix)[nichtSelektierteObjekte[j]][medoids[i]] > maxDistanzZuEinemAnderenMedoid){
                         
                         c = 0;
+                        cout << "       if1" << endl;
                     }
                     if((*distanzMatrix)[nichtSelektierteObjekte[j]][medoids[i]] <= maxDistanzZuEinemAnderenMedoid){
 
                         int distanzZweitNaechsterMedoid = getDistanzZumZweitNaechstenGewaehltenMedoid(nichtSelektierteObjekte[j]);
                         if((*distanzMatrix)[nichtSelektierteObjekte[j]][nichtSelektierteObjekte[h]] < distanzZweitNaechsterMedoid){
-
+                            
                             c = (*distanzMatrix)[nichtSelektierteObjekte[j]][nichtSelektierteObjekte[h]] - (*distanzMatrix)[nichtSelektierteObjekte[j]][medoids[i]];
+                            cout << "       if2" << endl;
                         }else{
-
+                            
                             c = distanzZweitNaechsterMedoid - getDistanzZumNaechstenGewaehltenMedoid(nichtSelektierteObjekte[j]);
+                            cout << "       if3 ce: " + to_string(c) << endl;
                         }
                     }
                     int distanzNaechsterMedoid = getDistanzZumNaechstenGewaehltenMedoid(nichtSelektierteObjekte[j]);
                     if((*distanzMatrix)[nichtSelektierteObjekte[j]][medoids[i]] > distanzNaechsterMedoid && 
                             (*distanzMatrix)[nichtSelektierteObjekte[j]][nichtSelektierteObjekte[h]] < distanzNaechsterMedoid){
-
+                              
                         c = (*distanzMatrix)[nichtSelektierteObjekte[j]][nichtSelektierteObjekte[h]] - distanzNaechsterMedoid;
+                        cout << "       if4" << endl;
                     }
+                    
                     sumTauschIH += c;
                 }
                 if((i == 0 && h == 0) || (sumTauschIH < minKosten)){
-
+                    
                     minKosten = sumTauschIH;
                     minI = i;
                     minH = h;
                 }
             }
         }
+        cout << "minKosten: " + to_string(minKosten) << endl;
         if(minKosten < 0){
-
+            
             int neuerMedoid = nichtSelektierteObjekte[minH];
             int neuesNichtselektierteObjekt = medoids[minI];
+            cout << "neuer medoid " + to_string(neuerMedoid) << endl;
+            cout << "neues objekt " + to_string(neuesNichtselektierteObjekt) << endl;
             nichtSelektierteObjekte.erase(nichtSelektierteObjekte.begin()+minH);
             nichtSelektierteObjekte.push_back(neuesNichtselektierteObjekt);
-            medoids.erase(nichtSelektierteObjekte.begin()+minI);
+            medoids.erase(medoids.begin()+minI);
             medoids.push_back(neuerMedoid);
         }else{
             konvergiert = true;
+            cout << "stopp setzen fuer while" << endl;
         }
     }
+    return medoids;
 };
 
 int pamClustering::getDistanzZumWeitestenGewaehltenMedoidAusserI(int objekt, int medoidI){
@@ -192,10 +216,10 @@ int pamClustering::getDistanzZumZweitNaechstenGewaehltenMedoid(int objekt){
 
             tmpMin2 = tmpMin;
             tmpMin = (*distanzMatrix)[objekt][medoids[i]];
-        }else if((*distanzMatrix)[objekt][medoids[i]] < tmpMin2){
+        }else if((*distanzMatrix)[objekt][medoids[i]] < tmpMin2 && (*distanzMatrix)[objekt][medoids[i]] > tmpMin){
             tmpMin2 = (*distanzMatrix)[objekt][medoids[i]];
         }
     }
-    //cout << "Distanz von Objekt " + to_string(objekt) + " zu medoid: " + to_string(tmpMax)<< endl;
+    cout << "Distanz von Objekt " + to_string(objekt) + " zu zweit naechstem medoid: " + to_string(tmpMin2)<< endl;
     return tmpMin2;
 };

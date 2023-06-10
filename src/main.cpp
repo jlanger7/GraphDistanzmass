@@ -13,7 +13,7 @@
 #include "graph.h"
 #include "teilgraphenSet.h"
 #include "zeitreihe.h"
-#include "cluster.h"
+#include "pamClustering.h"
 #include "../tests/zeitreiheTest.h"
 using namespace std;
 
@@ -22,18 +22,23 @@ string graphDatenOrdnerPfad = "C:\\Users\\Jonathan Langer\\Desktop\\SHK Job\\VS 
 int main(){
 
    vector<vector<int>> matrix{
-      {0,1,6,7},
-      {1,0,5,7},
-      {6,5,0,1},
-      {7,7,1,0},
+      {0,1,5,5,5,5},
+      {1,0,5,5,5,5},
+      {5,5,0,1,5,5},
+      {5,5,1,0,5,5},
+      {5,5,5,5,0,1},
+      {5,5,5,5,1,0}
    };
 
-   cluster c(&matrix);
+   pamClustering c(&matrix, 3);
 
-   vector<int> medoids = c.initPAM(2);
+   vector<int> medoids = c.berechneClustering();
+
+   cout << "zurueck in main" << endl;
    
    cout << medoids[0] << endl;
    cout << medoids[1] << endl;
+   cout << medoids[2] << endl;
 
 
 
