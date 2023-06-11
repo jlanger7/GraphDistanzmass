@@ -32,13 +32,17 @@ int main(){
 
    pamClustering c(&matrix, 3);
 
-   vector<int> medoids = c.berechneClustering();
+   vector<vector<int>> cluster = c.berechneClustering();
 
    cout << "zurueck in main" << endl;
    
-   cout << medoids[0] << endl;
-   cout << medoids[1] << endl;
-   cout << medoids[2] << endl;
+   for(int k = 0; k < size(cluster); k++){
+
+      cout << "Cluster Nr. " + to_string(k) + " represented durch Medoid " + to_string(c.getMedoids()[k]) + " enthaelt:" << endl;
+      for(int i = 0; i < size(cluster[k]); i++){
+         cout << "   " + to_string(cluster[k][i]) << endl;
+      } 
+   }
 
 
 

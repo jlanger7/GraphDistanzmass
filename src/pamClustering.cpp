@@ -98,7 +98,7 @@ int pamClustering::getDistanzZumNaechstenGewaehltenMedoid(int objekt){
     return tmpMin;
 };
 
-vector<int> pamClustering::berechneClustering(){
+vector<vector<int>> pamClustering::berechneClustering(){
 
     init();
     cout << "init abgeschlossen" << endl;
@@ -181,7 +181,31 @@ vector<int> pamClustering::berechneClustering(){
             cout << "stopp setzen fuer while" << endl;
         }
     }
-    return medoids;
+    berechneZuordnungZuCluster();
+
+    return zuordnungZuCluster;
+};
+
+void pamClustering::berechneZuordnungZuCluster(){
+
+    for(int i = 0; i < k; i++){
+        vector<int> clusterMitglieder;
+        zuordnungZuCluster.push_back(clusterMitglieder);
+    }
+    for(int i = 0; i < size(*distanzMatrix); i++){
+        
+        int minMedoidIndex;
+        int minMedoidDist;
+        for(int m = 0; m < size(medoids); m++){
+
+            if(m == 0 || (*distanzMatrix)[i][medoids[m]] < minMedoidDist){
+
+                minMedoidDist = (*distanzMatrix)[i][medoids[m]];
+                minMedoidIndex = m;
+            }
+        }
+        zuordnungZuCluster[minMedoidIndex].push_back(i);
+    }
 };
 
 int pamClustering::getDistanzZumWeitestenGewaehltenMedoidAusserI(int objekt, int medoidI){
