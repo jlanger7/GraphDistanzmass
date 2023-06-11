@@ -4,6 +4,7 @@
 #include <string>
 #include "knoten.h"
 #include "graph.h"
+#include "zeitreihe.h"
 
 class txtFileInterface{
 
@@ -11,6 +12,8 @@ class txtFileInterface{
     const int dimTime = 288;
     const int dimX = 1501;
     const int dimY = 1501;
+    vector<string> graphDateiZuordnung;
+    string pfadOutput = "C:\\Users\\Jonathan Langer\\OneDrive\\Bachelorarbeit\\Experimentdaten";
 
     public:
     txtFileInterface();
@@ -22,6 +25,8 @@ class txtFileInterface{
     int calculateGridId(int t, int x, int y){
         return (y + (x*dimY) + (t*dimX*dimY));
     }
+    void speichereZeitreihe(zeitreihe z, int zeitreihenAttribut, string dateiPfad);
+    void speichereCluster(vector<vector<int>> distanzMatrix0, vector<vector<int>> cluster0, vector<vector<int>> distanzMatrix1, vector<vector<int>> cluster1);
     int getDimTime(){
         return dimTime;
     };

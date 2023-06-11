@@ -87,8 +87,8 @@ float zeitreihe::berechneDtwDistanzND(vector<vector<int>> q){
             ca[i][j] = -1.0;
 
             ca[i][j] = berechneDtwDistanzFunktionswertND(q, ca, i, j);
-            cout << "ih: " + to_string(i) + " jot: " + to_string(j) + " ca[i][j]: " + to_string(ca[i][j]) << endl;
-            cout << " " << endl;
+            //cout << "ih: " + to_string(i) + " jot: " + to_string(j) + " ca[i][j]: " + to_string(ca[i][j]) << endl;
+            //cout << " " << endl;
         }
     }
     return ca[size(zeitreihenWerte)-1][size(q)-1];
@@ -146,7 +146,7 @@ int zeitreihe::berechneDiskreteFrechetDistanz1D(vector<vector<int>> q, int attri
             ca[i][j] = -1;
 
             ca[i][j] = berechneDiskreteFrechetDistanzFunktionswert1D(q, ca, i, j, attribut);
-            cout << "ih: " + to_string(i) + " jot: " + to_string(j) + " ca[i][j]: " + to_string(ca[i][j]) << endl;
+            //cout << "ih: " + to_string(i) + " jot: " + to_string(j) + " ca[i][j]: " + to_string(ca[i][j]) << endl;
         }
     }
     return ca[size(zeitreihenWerte)-1][size(q)-1];
@@ -179,7 +179,7 @@ int zeitreihe::berechneDtwDistanz1D(vector<vector<int>> q, int attribut){
             ca[i][j] = -1;
 
             ca[i][j] = berechneDtwDistanzFunktionswert1D(q, ca, i, j, attribut);
-            cout << "ih: " + to_string(i) + " jot: " + to_string(j) + " ca[i][j]: " + to_string(ca[i][j]) << endl;
+            //cout << "ih: " + to_string(i) + " jot: " + to_string(j) + " ca[i][j]: " + to_string(ca[i][j]) << endl;
         }
     }
     return ca[size(zeitreihenWerte)-1][size(q)-1];

@@ -163,6 +163,7 @@ void pamClustering::berechneZuordnungZuCluster(){
 
     for(int i = 0; i < k; i++){
         vector<int> clusterMitglieder;
+        clusterMitglieder.push_back(medoids[i]);
         zuordnungZuCluster.push_back(clusterMitglieder);
     }
     for(int i = 0; i < size(*distanzMatrix); i++){
@@ -178,7 +179,10 @@ void pamClustering::berechneZuordnungZuCluster(){
             }
         }
         wertKostenFunktion += minMedoidDist;
-        zuordnungZuCluster[minMedoidIndex].push_back(i);
+        if(i != zuordnungZuCluster[minMedoidIndex][0]){
+            
+            zuordnungZuCluster[minMedoidIndex].push_back(i);
+        }
     }
 };
 

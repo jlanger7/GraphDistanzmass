@@ -28,7 +28,7 @@ void teilgraphenSet::erstelleTeilgraphenSet(){
         if(zeitAttributAktKnoten > aktMaxZeitattribut){
 
             int differenz = zeitAttributAktKnoten - aktMaxZeitattribut;
-            cout << "differenz: " + to_string(differenz) << endl;
+            //cout << "differenz: " + to_string(differenz) << endl;
             aktMaxZeitattribut = zeitAttributAktKnoten;
             for(int i = 0; i < differenz; i++){
 
