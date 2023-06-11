@@ -12,6 +12,7 @@ class pamClustering{
     vector<int> medoids;
     vector<int> nichtSelektierteObjekte;
     vector<vector<int>> zuordnungZuCluster;
+    int wertKostenFunktion;
 
 
     public:
@@ -22,6 +23,9 @@ class pamClustering{
     int getDistanzZumZweitNaechstenGewaehltenMedoid(int objekt);
     vector<vector<int>> berechneClustering();
     void berechneZuordnungZuCluster();
+    int getWertKostenfunktion(){
+        return wertKostenFunktion;
+    };
     vector<int>& getMedoids(){
         return medoids;
     };

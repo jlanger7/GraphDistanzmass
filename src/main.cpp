@@ -30,12 +30,25 @@ int main(){
       {5,5,5,5,1,0}
    };
 
-   pamClustering c(&matrix, 3);
+   for(int k = 1; k < 6; k++){
 
-   vector<vector<int>> cluster = c.berechneClustering();
+      pamClustering c(&matrix, k);
+      vector<vector<int>> cluster = c.berechneClustering();
 
+      for(int j = 0; j < size(cluster); j++){
+
+      cout << "Cluster Nr. " + to_string(j) + " represented durch Medoid " + to_string(c.getMedoids()[j]) + " enthaelt:" << endl;
+         for(int i = 0; i < size(cluster[j]); i++){
+            cout << "   " + to_string(cluster[j][i]) << endl;
+         } 
+      }
+      cout << "Kostenfunktion: " + to_string(c.getWertKostenfunktion()) << endl;
+   }
+
+   //pamClustering c(&matrix, 3);
+   //vector<vector<int>> cluster = c.berechneClustering();
+   /*
    cout << "zurueck in main" << endl;
-   
    for(int k = 0; k < size(cluster); k++){
 
       cout << "Cluster Nr. " + to_string(k) + " represented durch Medoid " + to_string(c.getMedoids()[k]) + " enthaelt:" << endl;
@@ -43,8 +56,8 @@ int main(){
          cout << "   " + to_string(cluster[k][i]) << endl;
       } 
    }
-
-
+   cout << "Kostenfunktion: " + to_string(c.getWertKostenfunktion()) << endl;
+   */
 
 
    return 0;
@@ -121,6 +134,12 @@ int main(){
 
          cout << to_string(i) + " zu " + to_string(j) + " = " + to_string(distanzMatrixMaxZHK[i][j]) << endl;
       }
+   }
+
+   for(int k = 0; k < 5; k++){
+
+      pamClustering c(&matrix, k);
+      vector<vector<int>> cluster = c.berechneClustering();
    }
 
    return 0;
