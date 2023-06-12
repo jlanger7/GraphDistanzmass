@@ -29,17 +29,19 @@ int main(){
    
    vector<vector<int>> distanzMatrixNrZHK(size(graphDateien));
    vector<vector<int>> distanzMatrixMaxZHK(size(graphDateien));
+   vector<vector<int>> distanzMatrixMeanVZHK(size(graphDateien));
    for(int i = 0; i < size(graphDateien); i++){
       distanzMatrixNrZHK[i] = vector<int>(size(graphDateien));
       distanzMatrixMaxZHK[i] = vector<int>(size(graphDateien));
+      distanzMatrixMeanVZHK[i] = vector<int>(size(graphDateien));
    }
 
    vector<zeitreihe> zeitreihen;
 
-   //Vergleiche jeden Graphen aus dem Inputdaten-Ordner...
+   //Erstelle eine Zeitreihe für jeden Graphen aus dem Inputdaten-Ordner
    for(int i = 0; i < size(graphDateien); i++){
 
-      cout << "Vergleiche Graph " + to_string(i) + " mit" << endl;
+      cout << "Erstelle Zeitreihe fuer Graph " + to_string(i) << endl;
       //----------------Erstelle die erste Zeitreihe-----------------------
       //Erstelle eine Knotenliste aus der Inputdatei für den aktuell betrachteten Graphen, inkl. Zeitschrittattribut für jeden Knoten
       vector<knoten*> knotenListe1 = txt.readInNodes(graphDatenOrdnerPfad + "\\" + graphDateien[i]);
@@ -56,39 +58,34 @@ int main(){
       //Initialisiere eine Zeitreihe für die Teilgraphen
       zeitreihe z1(tgSet1);
       //z1.printZeitreihe();
-      txt.speichereZeitreihe(z1, 0, zeitreihenOrdnerPfad+"\\graphNr"+to_string(i)+"_attributNr0.txt");
-      txt.speichereZeitreihe(z1, 1, zeitreihenOrdnerPfad+"\\graphNr"+to_string(i)+"_attributNr1.txt");
+      txt.speichereZeitreihe(z1, 0, zeitreihenOrdnerPfad+"\\" + "graphNr" + to_string(i) + "_attributNr0_" + graphDateien[i]);
+      txt.speichereZeitreihe(z1, 1, zeitreihenOrdnerPfad+"\\" + "graphNr" + to_string(i) + "_attributNr1_" + graphDateien[i]);
+      txt.speichereZeitreihe(z1, 2, zeitreihenOrdnerPfad+"\\" + "graphNr" + to_string(i) + "_attributNr2_" + graphDateien[i]);
 
+      //Füge Zeitreihe dem Zeitreihen-Vektor hinzu fürs spätere vergleichen
       zeitreihen.push_back(z1);
+
+      //Speicher deallokieren
+      for(int k = 0; k < size(knotenListe1); k++){
+         delete knotenListe1[k];
+      }
+
 
    }
 
-   return 0;
+   //Vergleiche jede Zeitreihe...
+   for(int i = 0; i < size(graphDateien); i++){
 
-      //...mit jedem Graphen aus dem Inputdaten-Ordner
+      cout << "Vergleiche Zeitreihe " + to_string(i) << endl;
+      //...mit jeder Zeitreihe
       for(int j = 0; j < size(graphDateien); j++){
 
-         cout << "...Graph " + to_string(j) << endl;
-         //----------------Erstelle die zweite Zeitreihe-----------------------
-         //Erstelle eine Knotenliste aus der Inputdatei für den aktuell zu vergleichenden Graphen, inkl. Zeitschrittattribut für jeden 
-         //Knoten
-         vector<knoten*> knotenListe2 = txt.readInNodes(graphDatenOrdnerPfad + "\\" + graphDateien[j]);
-         //Berechne die Kanten aus der Inputdatei für den aktuell betrachteten Graphen und speichere sie in den Adjazenzlisten der Knoten
-         txt.berechneKanten(&knotenListe2);
-         //Initialisiere einen Graphen mit der erstellten Knotenliste
-         graph* g2 = new graph(knotenListe2);
-         //Initialisiere Teilgraphenset, dass für jeden Zeitschritt im Graphen einen Teilgraphen enthält
-         teilgraphenSet* tgSet2 = new teilgraphenSet(g2);
-         //Führe die mod. Tiefensuche auf jedem dieser Teilgraphen durch
-         for(int z = 0; z < size((*tgSet2).getTeilgraphen()); z++){
-            (*tgSet2).getTeilgraphen()[z].modifizierteTiefensuche();
-         }
-         //Initialisiere eine Zeitreihe für die Teilgraphen
-         zeitreihe z2(tgSet2);
-         //z2.printZeitreihe();
+         cout << "   mit Zeitreihe " + to_string(j) << endl;
 
-         distanzMatrixNrZHK[i][j] = z1.berechneDtwDistanz1D(z2.getZeitreihenWerte(),0);
-         distanzMatrixMaxZHK[i][j] = z1.berechneDtwDistanz1D(z2.getZeitreihenWerte(),1);
+         //Füge Distanzen den Distanzmatrizen hinzu
+         distanzMatrixNrZHK[i][j] = zeitreihen[i].berechneDtwDistanz1D(zeitreihen[j].getZeitreihenWerte(),0);
+         distanzMatrixMaxZHK[i][j] = zeitreihen[i].berechneDtwDistanz1D(zeitreihen[j].getZeitreihenWerte(),1);
+         distanzMatrixMeanVZHK[i][j] = zeitreihen[i].berechneDtwDistanz1D(zeitreihen[j].getZeitreihenWerte(),2);
          //Matrizen sollten symmetrisch sein, also hier evtl auch Werte für [j][i] einfügen und oben zu Beginn pruefen, ob Wert schon
          //berechnet wurde
 
@@ -110,9 +107,9 @@ int main(){
       }
    }*/
 
-   pamClustering clusteringAttribut0(&distanzMatrixNrZHK, 2);
-   vector<vector<int>> cluster0 = clusteringAttribut0.berechneClustering();
-   pamClustering clusteringAttribut1(&distanzMatrixMaxZHK, 2);
+   pamClustering clusteringAttribut0(&distanzMatrixNrZHK, 3);
+   vector<vector<int>> cluster0 = clusteringAttribut0.berechneClustering(); 
+   pamClustering clusteringAttribut1(&distanzMatrixMaxZHK, 3);
    vector<vector<int>> cluster1 = clusteringAttribut1.berechneClustering();
 
    txt.speichereCluster(distanzMatrixNrZHK, cluster0, distanzMatrixMaxZHK, cluster1);

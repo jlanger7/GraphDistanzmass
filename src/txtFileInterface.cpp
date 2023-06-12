@@ -2,6 +2,8 @@
 #include <fstream>
 #include <iostream>
 #include <filesystem>
+#include <chrono>
+#include <ctime>  
 #include "txtFileInterface.h"
 #include "knoten.h"
 #include "graph.h"
@@ -113,6 +115,7 @@ vector<knoten*> txtFileInterface::readInNodes(string dateiPfad){
     }
    
    file.close();
+   cout << "Knoten eingelesen" << endl;
    return knotenListe;
 };
 
@@ -182,7 +185,16 @@ void txtFileInterface::speichereZeitreihe(zeitreihe z, int zeitreihenAttribut, s
 
 void txtFileInterface::speichereCluster(vector<vector<int>> distanzMatrix0, vector<vector<int>> cluster0, vector<vector<int>> distanzMatrix1, vector<vector<int>> cluster1){
 
-    ofstream myfile(pfadOutput + "\\GraphZuordnungUndDistanzmatritzen.txt");
+    cout << "speichere Cluster" << endl;
+
+    auto now = std::chrono::system_clock::now();
+    auto in_time_t = std::chrono::system_clock::to_time_t(now);
+    std::stringstream datetime;
+    datetime << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d_%H-%M");
+
+    cout << "datetime berechnet" << endl;
+    
+    ofstream myfile(pfadOutput + "\\GraphZuordnungUndDistanzmatritzen_" + datetime.str() + ".txt");
 
     //schreibe Zuordnung der Graph Nr zu Dateiname weg
     for(int i = 0; i < size(graphDateiZuordnung); i++){
@@ -205,7 +217,7 @@ void txtFileInterface::speichereCluster(vector<vector<int>> distanzMatrix0, vect
                 zahl = zahl/10;
                 d += 1;
             }
-            int spaceNr = 6 - d;
+            int spaceNr = 10 - d;
             myfile << distanzMatrix0[i][j] ;
             for(int d = 0; d < spaceNr; d++){
                 myfile << " ";
@@ -229,7 +241,7 @@ void txtFileInterface::speichereCluster(vector<vector<int>> distanzMatrix0, vect
                 zahl = zahl/10;
                 d += 1;
             }
-            int spaceNr = 6 - d;
+            int spaceNr = 10 - d;
             myfile << distanzMatrix1[i][j] ;
             for(int d = 0; d < spaceNr; d++){
                 myfile << " ";
@@ -239,7 +251,7 @@ void txtFileInterface::speichereCluster(vector<vector<int>> distanzMatrix0, vect
     }
     myfile.close();
 
-    ofstream myfile2(pfadOutput + "\\clusterAttribut0.txt");
+    ofstream myfile2(pfadOutput + "\\clusterAttribut0_" + datetime.str() + ".txt");
 
     for(int i = 0; i < size(cluster0); i++){
         for(int j = 0; j < size(cluster0[i]); j++){
@@ -250,7 +262,7 @@ void txtFileInterface::speichereCluster(vector<vector<int>> distanzMatrix0, vect
     }
     myfile2.close();
 
-    ofstream myfile3(pfadOutput + "\\clusterAttribut1.txt");
+    ofstream myfile3(pfadOutput + "\\clusterAttribut1_" + datetime.str() + ".txt");
 
     for(int i = 0; i < size(cluster1); i++){
         for(int j = 0; j < size(cluster1[i]); j++){

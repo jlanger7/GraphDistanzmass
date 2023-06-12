@@ -16,7 +16,8 @@ zeitreihe::zeitreihe(teilgraphenSet* teilgraphenIn){
         vector<int> vecTmp;
         vecTmp.push_back((*teilgraphenIn).getTeilgraphen()[i].getAnzahlZhk());
         vecTmp.push_back((*teilgraphenIn).getTeilgraphen()[i].getMaxVZhk());
-        vecTmp.push_back((*teilgraphenIn).getTeilgraphen()[i].getMinVZhk());
+        vecTmp.push_back((*teilgraphenIn).getTeilgraphen()[i].getMeanVZhk());
+
         zeitreihenWerte.push_back(vecTmp);
     }
 };
@@ -182,7 +183,15 @@ int zeitreihe::berechneDtwDistanz1D(vector<vector<int>> q, int attribut){
             //cout << "ih: " + to_string(i) + " jot: " + to_string(j) + " ca[i][j]: " + to_string(ca[i][j]) << endl;
         }
     }
-    return ca[size(zeitreihenWerte)-1][size(q)-1];
+    int output = ca[size(zeitreihenWerte)-1][size(q)-1];
+
+    //Speicher deallokieren
+    for(int i = 0; i < size(zeitreihenWerte); i++){
+        delete [] ca[i];
+    }
+    delete [] ca;
+
+    return output;
 };
 
 int zeitreihe::berechneDtwDistanzFunktionswert1D(vector<vector<int>> q, int** caIn, int i , int j, int attribut){

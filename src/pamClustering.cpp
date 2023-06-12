@@ -11,6 +11,8 @@ pamClustering::pamClustering(vector<vector<int>>* distanzMatrixIn, int kIn){
 
 void pamClustering::init(){
 
+    cout << "init Clustering" << endl;
+
     //----------------suche erstes init medoid------------
     //init tmp variablen
     int tmpMinElement = 0;
@@ -90,6 +92,9 @@ int pamClustering::getDistanzZumNaechstenGewaehltenMedoid(int objekt){
 vector<vector<int>> pamClustering::berechneClustering(){
 
     init();
+
+    cout << "berechne Clustering" << endl;
+
     bool konvergiert = false;
     while(!konvergiert){
 

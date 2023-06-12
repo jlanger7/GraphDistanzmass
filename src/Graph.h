@@ -11,7 +11,7 @@ class graph{
     vector<knoten*> knotenMenge;
     int anzahlZhk;
     int maxVZhk;
-    int minVZhk;
+    int meanVZhk;
     vector<vector<knoten*>> zhkKnotenMengen;
 
 
@@ -31,8 +31,8 @@ class graph{
     int getMaxVZhk(){
         return maxVZhk;
     };
-    int getMinVZhk(){
-        return minVZhk;
+    int getMeanVZhk(){
+        return meanVZhk;
     };
 
 

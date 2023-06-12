@@ -26,120 +26,14 @@ void test(int* z){
 int main()
 {
 
-
-
-
-/*
-   int a = 5;
-   test(&a);
-   cout << a << endl;
-*/
-   cout << "Hello World" << endl;
-
-   vector<knoten*> knotenListe;
-   for(int i = 0; i < 9; i++){
-      
-      int zeitAttribut = 0;
-      if(i < 3){
-         zeitAttribut = 1;
-      }else if(i < 6){
-         zeitAttribut = 2;
-      }else if(i < 9){
-         zeitAttribut = 3;
-      }
-      knoten* v = new knoten(i, zeitAttribut);
-      knotenListe.push_back(v);
-   }
-   knoten* v = new knoten(9, 1);
-   knotenListe.push_back(v);
-
-   graph* g = new graph(knotenListe);
-
-   (*(*g).getKnotenMenge()[0]).addNachbarn((*g).getKnotenMenge()[3]);//extra
-   (*(*g).getKnotenMenge()[0]).addNachbarn((*g).getKnotenMenge()[4]);//extra
-   (*(*g).getKnotenMenge()[0]).addNachbarn((*g).getKnotenMenge()[1]);
-   (*(*g).getKnotenMenge()[0]).addNachbarn((*g).getKnotenMenge()[2]);
-   (*(*g).getKnotenMenge()[1]).addNachbarn((*g).getKnotenMenge()[0]);
-   (*(*g).getKnotenMenge()[1]).addNachbarn((*g).getKnotenMenge()[2]);
-   (*(*g).getKnotenMenge()[2]).addNachbarn((*g).getKnotenMenge()[0]);
-   (*(*g).getKnotenMenge()[2]).addNachbarn((*g).getKnotenMenge()[8]);//extra
-   (*(*g).getKnotenMenge()[2]).addNachbarn((*g).getKnotenMenge()[1]);
-   (*(*g).getKnotenMenge()[3]).addNachbarn((*g).getKnotenMenge()[0]);//extra
-   (*(*g).getKnotenMenge()[3]).addNachbarn((*g).getKnotenMenge()[4]);
-   (*(*g).getKnotenMenge()[3]).addNachbarn((*g).getKnotenMenge()[5]);
-   (*(*g).getKnotenMenge()[4]).addNachbarn((*g).getKnotenMenge()[3]);
-   (*(*g).getKnotenMenge()[4]).addNachbarn((*g).getKnotenMenge()[5]);
-   (*(*g).getKnotenMenge()[5]).addNachbarn((*g).getKnotenMenge()[3]);
-   (*(*g).getKnotenMenge()[5]).addNachbarn((*g).getKnotenMenge()[4]);
-   (*(*g).getKnotenMenge()[5]).addNachbarn((*g).getKnotenMenge()[6]);//extra
-   (*(*g).getKnotenMenge()[6]).addNachbarn((*g).getKnotenMenge()[5]);//extra
-   (*(*g).getKnotenMenge()[6]).addNachbarn((*g).getKnotenMenge()[7]);
-   (*(*g).getKnotenMenge()[6]).addNachbarn((*g).getKnotenMenge()[8]);
-   (*(*g).getKnotenMenge()[7]).addNachbarn((*g).getKnotenMenge()[6]);
-   (*(*g).getKnotenMenge()[7]).addNachbarn((*g).getKnotenMenge()[8]);
-   (*(*g).getKnotenMenge()[8]).addNachbarn((*g).getKnotenMenge()[6]);
-   (*(*g).getKnotenMenge()[8]).addNachbarn((*g).getKnotenMenge()[7]);
-   (*(*g).getKnotenMenge()[8]).addNachbarn((*g).getKnotenMenge()[2]);//extra
-
-   for(int i = 0; i < size((*g).getKnotenMenge()); i++){
-
-      knoten v = (*(*g).getKnotenMenge()[i]);
-      cout << v.getId() << endl;
-   }
-
-   teilgraphenSet* tgSet = new teilgraphenSet(g);
-   (*tgSet).erstelleTeilgraphenSet();
-
-
-   for(int i = 0; i < size(knotenListe1); i++){
-
-      if((*(*g1).getKnotenMenge()[i]).getId() == 117682039){
-         cout << "   ID Nachbar: " + to_string( (*(*(*g1).getKnotenMenge()[i]).getAdjazenzListe()[0]).getId() ) << endl;
-         cout << "   ID Nachbar: " + to_string( (*(*(*g1).getKnotenMenge()[i]).getAdjazenzListe()[1]).getId() ) << endl;
-         cout << "   ID Nachbar: " + to_string( (*(*(*g1).getKnotenMenge()[i]).getAdjazenzListe()[2]).getId() ) << endl;
-         cout << "   ID Nachbar: " + to_string( (*(*(*g1).getKnotenMenge()[i]).getAdjazenzListe()[3]).getId() ) << endl;
-         cout << "   ID Nachbar: " + to_string( (*(*(*g1).getKnotenMenge()[i]).getAdjazenzListe()[4]).getId() ) << endl;
-
-      }
-   }
-
-   /*
-   cout << "Nachbarn 3" << endl;
-   cout << "Eigene ID: " + to_string((*(*tgSet).getTeilgraphen()[0].getKnotenMenge()[0]).getId()) << endl;
-   for(int i= 0; i < size((*(*tgSet).getTeilgraphen()[0].getKnotenMenge()[1]).getAdjazenzListe()); i++){ 
-      cout << (*(*(*tgSet).getTeilgraphen()[0].getKnotenMenge()[0]).getAdjazenzListe()[i]).getId() << endl;
-   }
-   */
    
+   auto now = std::chrono::system_clock::now();
+   auto in_time_t = std::chrono::system_clock::to_time_t(now);
+   std::stringstream datetime;
+   datetime << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d_%H-%M");
+    
 
-   for(int i = 0; i < size((*tgSet).getTeilgraphen()); i++){
-
-      //cout << "Teilgraph nr: " + to_string(i+1) << endl;
-      /*
-      for(int z = 0; z < size((*tgSet).getTeilgraphen()[i].getKnotenMenge()); z++){
-         
-         cout << "   KnotenId: " + to_string((*(*tgSet).getTeilgraphen()[i].getKnotenMenge()[z]).getId()) << endl;
-         cout << "   KnotenZeit: " + to_string((*(*tgSet).getTeilgraphen()[i].getKnotenMenge()[z]).getZeitAttribut()) << endl;
-         cout << "   Nachbarn: " << endl;
-         for(int y= 0; y < size((*(*tgSet).getTeilgraphen()[i].getKnotenMenge()[z]).getAdjazenzListe()); y++){ 
-            cout << "      " + to_string((*(*(*tgSet).getTeilgraphen()[i].getKnotenMenge()[z]).getAdjazenzListe()[y]).getId()) << endl;
-         }
-      }
-      */
-      (*tgSet).getTeilgraphen()[i].modifizierteTiefensuche();
-      //cout << "Anzahl Zhks: " + to_string((*tgSet).getTeilgraphen()[i].getAnzahlZhk()) << endl;
-      //cout << "MaxVZhk: " + to_string((*tgSet).getTeilgraphen()[i].getMaxVZhk()) << endl;
-      //cout << "MinVZhk: " + to_string((*tgSet).getTeilgraphen()[i].getMinVZhk()) << endl;
-   }
-
-
-
-
-  
-
-   zeitreihe z(tgSet);
-   z.printZeitreihe();
-
+   cout << datetime.str() << endl;
    
    return 0;
 }
