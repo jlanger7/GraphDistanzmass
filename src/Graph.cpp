@@ -10,7 +10,9 @@ graph::graph(){
 
 graph::graph(vector<knoten*>& knotenMengeIn){
 
+    cout << "       Konstruktor Graph Start" << endl;
     knotenMenge = knotenMengeIn;
+    cout << "       Konstruktor Graph Ende" << endl;
 };
 void graph::modifizierteTiefensuche(){
 

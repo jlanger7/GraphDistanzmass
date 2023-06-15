@@ -98,6 +98,7 @@ vector<vector<int>> pamClustering::berechneClustering(){
     bool konvergiert = false;
     while(!konvergiert){
 
+        cout << "   Iteration Clustering" << endl;
         int minKosten;
         int minI;
         int minH;
@@ -157,6 +158,7 @@ vector<vector<int>> pamClustering::berechneClustering(){
             konvergiert = true;
         }
     }
+    cout << "Clustering berechnet" << endl;
     berechneZuordnungZuCluster();
 
     return zuordnungZuCluster;

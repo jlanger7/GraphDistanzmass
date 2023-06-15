@@ -12,8 +12,10 @@ teilgraphenSet::teilgraphenSet(){
 
 teilgraphenSet::teilgraphenSet(graph* inputGraph){
 
+    cout << "       Konstruktor TG Start" << endl;
     gesamtGraph = inputGraph;
     erstelleTeilgraphenSet();
+    cout << "       Konstruktor TG Ende" << endl;
 };
 
 void teilgraphenSet::erstelleTeilgraphenSet(){

@@ -14,6 +14,7 @@ class txtFileInterface{
     const int dimY = 1501;
     vector<string> graphDateiZuordnung;
     string pfadOutput = "C:\\Users\\Jonathan Langer\\OneDrive\\Bachelorarbeit\\Experimentdaten";
+    vector<int>** helpArr;
 
     public:
     txtFileInterface();
@@ -21,11 +22,14 @@ class txtFileInterface{
     int* calculateCoordinates(int gridId);
     std::vector<knoten*> readInNodes(std::string dateiPfad);
     void berechneKanten(vector<knoten*>* knotenListe);
+    void berechneKantenTest(vector<knoten*>* knotenListe);
     vector<string> getGraphdatenDateinamen(string ordnerPfad);
     int calculateGridId(int t, int x, int y){
         return (y + (x*dimY) + (t*dimX*dimY));
     }
     void speichereZeitreihe(zeitreihe z, int zeitreihenAttribut, string dateiPfad);
+    vector<zeitreihe>* einlesenVonZeitreihen(string ordnerPfad);
+    void speichereCluster(vector<vector<int>> distanzMatrix, vector<vector<int>> cluster);
     void speichereCluster(vector<vector<int>> distanzMatrix0, vector<vector<int>> cluster0, vector<vector<int>> distanzMatrix1, vector<vector<int>> cluster1);
     int getDimTime(){
         return dimTime;
