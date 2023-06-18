@@ -11,7 +11,7 @@ pamClustering::pamClustering(vector<vector<int>>* distanzMatrixIn, int kIn){
 
 void pamClustering::init(){
 
-    cout << "init Clustering" << endl;
+    cout << "   init Clustering fuer ka: " + to_string(k) << endl;
 
     //----------------suche erstes init medoid------------
     //init tmp variablen
@@ -93,12 +93,13 @@ vector<vector<int>> pamClustering::berechneClustering(){
 
     init();
 
-    cout << "berechne Clustering" << endl;
+    cout << "   berechne Clustering" << endl;
 
     bool konvergiert = false;
-    while(!konvergiert){
+    int iterationen = 0;
+    while(!konvergiert && iterationen < 1000){
 
-        cout << "   Iteration Clustering" << endl;
+        //cout << "   Iteration Clustering Nr. " + to_string(iterationen) << endl;
         int minKosten;
         int minI;
         int minH;
@@ -112,27 +113,42 @@ vector<vector<int>> pamClustering::berechneClustering(){
 
                         int c;
                         int minDistanzZuEinemAnderenMedoid = getDistanzZumNaechstenGewaehltenMedoid(nichtSelektierteObjekte[j]);
+                        //cout << "       returnWert naechster: " + to_string(minDistanzZuEinemAnderenMedoid) << endl;
+                        //cout << "       was here: " + to_string(__LINE__) << endl;
                         if((*distanzMatrix)[nichtSelektierteObjekte[j]][nichtSelektierteObjekte[h]] > minDistanzZuEinemAnderenMedoid && 
                                 (*distanzMatrix)[nichtSelektierteObjekte[j]][medoids[i]] > minDistanzZuEinemAnderenMedoid){
-                            
                             c = 0;
+                            //if (iterationen > 998){cout << "       Iteration: " + to_string(iterationen) + " if1" << endl;}
                         }
+                        //cout << "       was here: " + to_string(__LINE__) << endl;
+                        //cout << "       Wert Distanzmatrix: " + to_string((*distanzMatrix)[nichtSelektierteObjekte[j]][medoids[i]]) << endl;
                         if((*distanzMatrix)[nichtSelektierteObjekte[j]][medoids[i]] == minDistanzZuEinemAnderenMedoid){
 
+                            //cout << "       was here: " + to_string(__LINE__) << endl;
                             int distanzZweitNaechsterMedoid = getDistanzZumZweitNaechstenGewaehltenMedoid(nichtSelektierteObjekte[j]);
+                            //cout << "       returnWert zweitnaechster: " + to_string(distanzZweitNaechsterMedoid) << endl;
+                            //cout << "       was here: " + to_string(__LINE__) << endl;
                             if((*distanzMatrix)[nichtSelektierteObjekte[j]][nichtSelektierteObjekte[h]] < distanzZweitNaechsterMedoid){
+                                //cout << "       was here: " + to_string(__LINE__) << endl;
                                 
                                 c = (*distanzMatrix)[nichtSelektierteObjekte[j]][nichtSelektierteObjekte[h]] - (*distanzMatrix)[nichtSelektierteObjekte[j]][medoids[i]];
+                                //if (iterationen > 998){cout << "       Iteration: " + to_string(iterationen) + " if2" << endl;}
                             }else{
+                                //cout << "       was here: " + to_string(__LINE__) << endl;
                                 
                                 c = distanzZweitNaechsterMedoid - minDistanzZuEinemAnderenMedoid;
+                                //if (iterationen > 998){cout << "       Iteration: " + to_string(iterationen) + " if3" << endl;}
                             }
                         }
                         int distanzNaechsterMedoid = getDistanzZumNaechstenGewaehltenMedoid(nichtSelektierteObjekte[j]);
+                        //cout << "       returnWert naechster: " + to_string(distanzNaechsterMedoid) << endl;
+                        //cout << "       was here: " + to_string(__LINE__) << endl;
                         if((*distanzMatrix)[nichtSelektierteObjekte[j]][medoids[i]] > distanzNaechsterMedoid && 
                                 (*distanzMatrix)[nichtSelektierteObjekte[j]][nichtSelektierteObjekte[h]] < distanzNaechsterMedoid){
                                 
+                            //cout << "       was here: " + to_string(__LINE__) << endl;
                             c = (*distanzMatrix)[nichtSelektierteObjekte[j]][nichtSelektierteObjekte[h]] - distanzNaechsterMedoid;
+                            //if (iterationen > 998){cout << "       Iteration: " + to_string(iterationen) + " if4" << endl;}
                         }
                         
                         sumTauschIH += c;
@@ -146,19 +162,49 @@ vector<vector<int>> pamClustering::berechneClustering(){
                 }
             }
         }
+        if (iterationen > 980){
+            cout << "       minKosten bei Iteration: " + to_string(iterationen) + " = " + to_string(minKosten) << endl;
+        }
         if(minKosten < 0){
             
+            //cout << "       was here: " + to_string(__LINE__) << endl;
             int neuerMedoid = nichtSelektierteObjekte[minH];
             int neuesNichtselektierteObjekt = medoids[minI];
+            if (iterationen > 998){
+                cout << "       neuer Medoid Objekt: " + to_string(nichtSelektierteObjekte[minH]) + " entfernter Medoid " + to_string(medoids[minI]) << endl;
+            }
             nichtSelektierteObjekte.erase(nichtSelektierteObjekte.begin()+minH);
             nichtSelektierteObjekte.push_back(neuesNichtselektierteObjekt);
             medoids.erase(medoids.begin()+minI);
             medoids.push_back(neuerMedoid);
+            if (iterationen > 998){
+                cout << "       nichtselektierteObjekte nun: " << " ";
+                for(int p = 0; p < size(nichtSelektierteObjekte); p++){
+                    cout << nichtSelektierteObjekte[p] << " ";
+                }
+                cout << endl;
+            }
+            if (iterationen > 998){
+                cout << "       medoids nun: " << " ";
+                for(int p = 0; p < size(medoids); p++){
+                    cout << medoids[p] << " ";
+                }
+                cout << endl;
+            }
+            //cout << "       was here: " + to_string(__LINE__) << endl;
         }else{
             konvergiert = true;
+            cout << "   Ende nach Iteration Nr. " + to_string(iterationen) << endl;
         }
+
+        if(iterationen < 999 && iterationen > 990 || iterationen < 9999 && iterationen > 9990){
+            berechneZuordnungZuCluster();
+            cout << "   Wert Kostenfkt nun " + to_string(wertKostenFunktion) << endl;
+        }
+        
+        iterationen += 1;
     }
-    cout << "Clustering berechnet" << endl;
+    cout << "   Clustering berechnet" << endl;
     berechneZuordnungZuCluster();
 
     return zuordnungZuCluster;

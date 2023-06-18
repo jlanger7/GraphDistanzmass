@@ -19,6 +19,7 @@ class graph{
     graph();
     graph(vector<knoten*>& knotenMengeIn);
     void addKnoten(knoten* knotenIn);
+    void modifizierteTiefensucheNeu();
     void modifizierteTiefensuche();
     void durchsucheNachbarn(knoten& v, vector<knoten*>& adjazenzListe, int &aktNrZhks, int &tmpNrV);
 

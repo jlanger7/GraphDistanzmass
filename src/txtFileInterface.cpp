@@ -253,6 +253,11 @@ void txtFileInterface::berechneKantenTest(vector<knoten*>* knotenListe){
         }
         delete[] coordinates;
     }
+    
+    for(int t = 0; t < dimTime; t++){
+        delete[] helpArr[t];
+    }
+    delete[] helpArr;
     std::cout << "  Anzahl kanten: " + to_string(kantenZ) << endl;
 };
 
@@ -315,14 +320,14 @@ vector<zeitreihe>* txtFileInterface::einlesenVonZeitreihen(string ordnerPfad){
     return zeitreihen;    
 };
 
-void txtFileInterface::speichereCluster(vector<vector<int>> distanzMatrix, vector<vector<int>> cluster){
+void txtFileInterface::speichereDistanzmatrix(vector<vector<int>> distanzMatrix){
 
-    cout << "speichere Cluster" << endl;
+    cout << "speichere Distanzmatrix" << endl;
 
     auto now = std::chrono::system_clock::now();
     auto in_time_t = std::chrono::system_clock::to_time_t(now);
     std::stringstream datetime;
-    datetime << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d_%H-%M");
+    datetime << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d_%H-%M-%S");
 
     ofstream myfile(pfadOutput + "\\GraphZuordnungUndDistanzmatritzen_" + datetime.str() + ".txt");
 
@@ -357,8 +362,18 @@ void txtFileInterface::speichereCluster(vector<vector<int>> distanzMatrix, vecto
     }
     myfile << endl;
     myfile.close();
+};
 
-    ofstream myfile2(pfadOutput + "\\clusterAttributeGesamt_" + datetime.str() + ".txt");
+void txtFileInterface::speichereCluster(vector<vector<int>> cluster, int k){
+
+    cout << "   speichere Cluster" << endl;
+
+    auto now = std::chrono::system_clock::now();
+    auto in_time_t = std::chrono::system_clock::to_time_t(now);
+    std::stringstream datetime;
+    datetime << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d_%H-%M-%S");
+
+    ofstream myfile2(pfadOutput + "\\" + to_string(k) + "_clusterAttributeGesamt_" + datetime.str() + ".txt");
 
     for(int i = 0; i < size(cluster); i++){
         for(int j = 0; j < size(cluster[i]); j++){

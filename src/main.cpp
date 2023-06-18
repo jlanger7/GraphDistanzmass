@@ -20,15 +20,16 @@ using namespace std;
 string graphDatenOrdnerPfad = "C:\\Users\\Jonathan Langer\\OneDrive\\Bachelorarbeit\\Experimentdaten\\comparingProcessedData\\calculateDistance";
 string zeitreihenOrdnerPfad = "C:\\Users\\Jonathan Langer\\OneDrive\\Bachelorarbeit\\Experimentdaten\\zeitreihen";
 
-int main(){
-   
+void graphenZuZeitreihenTransformieren(){
+
    txtFileInterface txt;
    //---------------Neue Methode Kanten berechnen Testen-----------------
-   vector<string> graphDateien = txt.getGraphdatenDateinamen(graphDatenOrdnerPfad);
-   cout << "Anzahl Graphdateien im Ordner: " + to_string(size(graphDateien)) << endl;
+   vector<string> graphDateien1 = txt.getGraphdatenDateinamen(graphDatenOrdnerPfad);
+   cout << "Anzahl Graphdateien im Ordner: " + to_string(size(graphDateien1)) << endl;
+   int anzahlBereitsvorhandeneGraphen = 33;
 
    //Erstelle eine Zeitreihe für jeden Graphen aus dem Inputdaten-Ordner
-   for(int i = 0; i < size(graphDateien); i++){
+   for(int i = 0; i < size(graphDateien1); i++){
 
       cout << "Erstelle Zeitreihe fuer Graph " + to_string(i) << endl;
       auto now = std::chrono::system_clock::now();
@@ -36,7 +37,7 @@ int main(){
       std::cout << "Startzeit neue Methode " << std::ctime(&t_c);
       //----------------Erstelle die erste Zeitreihe-----------------------
       //Erstelle eine Knotenliste aus der Inputdatei für den aktuell betrachteten Graphen, inkl. Zeitschrittattribut für jeden Knoten
-      vector<knoten*> knotenListe1 = txt.readInNodes(graphDatenOrdnerPfad + "\\" + graphDateien[i]);
+      vector<knoten*> knotenListe1 = txt.readInNodes(graphDatenOrdnerPfad + "\\" + graphDateien1[i]);
       //Berechne die Kanten aus der Inputdatei für den aktuell betrachteten Graphen und speichere sie in den Adjazenzlisten der Knoten
       txt.berechneKantenTest(&knotenListe1);
       //Initialisiere einen Graphen mit der erstellten Knotenliste
@@ -46,15 +47,17 @@ int main(){
       teilgraphenSet* tgSet1 = new teilgraphenSet(g1);
       cout << "   TG-Set initialisiert Main" << endl;
       //Führe die mod. Tiefensuche auf jedem dieser Teilgraphen durch
+      cout << "   Anzahl TG: " + to_string(size((*tgSet1).getTeilgraphen())) << endl;
       for(int z = 0; z < size((*tgSet1).getTeilgraphen()); z++){
-         (*tgSet1).getTeilgraphen()[z].modifizierteTiefensuche();
+         cout << "   mod.Tiefensuche fuer TG Nr: " + to_string(z) << endl;
+         (*tgSet1).getTeilgraphen()[z].modifizierteTiefensucheNeu();
       }
       //Initialisiere eine Zeitreihe für die Teilgraphen
       zeitreihe z1(tgSet1);
       //z1.printZeitreihe();
-      txt.speichereZeitreihe(z1, 0, zeitreihenOrdnerPfad+"\\" + "graphNr" + to_string(i) + "_attributNr0_" + graphDateien[i]);
-      txt.speichereZeitreihe(z1, 1, zeitreihenOrdnerPfad+"\\" + "graphNr" + to_string(i) + "_attributNr1_" + graphDateien[i]);
-      txt.speichereZeitreihe(z1, 2, zeitreihenOrdnerPfad+"\\" + "graphNr" + to_string(i) + "_attributNr2_" + graphDateien[i]);
+      txt.speichereZeitreihe(z1, 0, zeitreihenOrdnerPfad+"\\" + "graphNr" + to_string(i+anzahlBereitsvorhandeneGraphen) + "_attributNr0_" + graphDateien1[i]);
+      txt.speichereZeitreihe(z1, 1, zeitreihenOrdnerPfad+"\\" + "graphNr" + to_string(i+anzahlBereitsvorhandeneGraphen) + "_attributNr1_" + graphDateien1[i]);
+      txt.speichereZeitreihe(z1, 2, zeitreihenOrdnerPfad+"\\" + "graphNr" + to_string(i+anzahlBereitsvorhandeneGraphen) + "_attributNr2_" + graphDateien1[i]);
 
       //Speicher deallokieren
       for(int k = 0; k < size(knotenListe1); k++){
@@ -64,8 +67,39 @@ int main(){
       std::time_t t_c2 = std::chrono::system_clock::to_time_t(now2);
       std::cout << "Endzeit neue Methode " << std::ctime(&t_c2);
    }
+}
 
-   return 0;
+void clusterTest(){
+
+   vector<vector<int>> matrix{
+      {0,1,5,5,5,5},
+      {1,0,5,5,5,5},
+      {5,5,0,1,5,5},
+      {5,5,1,0,5,5},
+      {5,5,5,5,0,1},
+      {5,5,5,5,1,0}
+   };
+
+   for(int k = 1; k < 20; k++){
+
+      pamClustering c(&matrix, k);
+      vector<vector<int>> cluster = c.berechneClustering();
+      cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c.getWertKostenfunktion()) << endl;
+
+      for(int j = 0; j < size(cluster); j++){
+      cout << "Cluster Nr. " + to_string(j) + " represented durch Medoid " + to_string(c.getMedoids()[j]) + " enthaelt:" << endl;
+         for(int i = 0; i < size(cluster[j]); i++){
+            cout << "   " + to_string(cluster[j][i]) << endl;
+         } 
+      }
+      //txt.speichereCluster(distanzMatrixGes1, cluster);
+   }
+
+};
+
+int main(){
+
+   txtFileInterface txt;
 
    vector<zeitreihe>* zz = txt.einlesenVonZeitreihen(zeitreihenOrdnerPfad);
 
@@ -98,20 +132,22 @@ int main(){
    }
    delete zz;
 
-   for(int i = 0; i < size(distanzMatrixGes1); i++){
-      for(int j = 0; j < size(distanzMatrixGes1[i]); j++){
+   // for(int i = 0; i < size(distanzMatrixGes1); i++){
+   //    for(int j = 0; j < size(distanzMatrixGes1[i]); j++){
 
-         cout << distanzMatrixGes1[i][j] << "   ";
-      }
-      cout << endl;
-   }
+   //       cout << distanzMatrixGes1[i][j] << "   ";
+   //    }
+   //    cout << endl;
+   // }
 
-   for(int k = 1; k < 25; k++){
+   txt.speichereDistanzmatrix(distanzMatrixGes1);
+
+   for(int k = 2; k < 50; k++){
 
       pamClustering c(&distanzMatrixGes1, k);
       vector<vector<int>> cluster = c.berechneClustering();
       cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c.getWertKostenfunktion()) << endl;
-      txt.speichereCluster(distanzMatrixGes1, cluster);
+      txt.speichereCluster(cluster, k);
    }
 
 
@@ -216,7 +252,7 @@ int main(){
       pamClustering c(&distanzMatrixGes, k);
       vector<vector<int>> cluster = c.berechneClustering();
       cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c.getWertKostenfunktion());
-      txt.speichereCluster(distanzMatrixGes, cluster);
+      //txt.speichereCluster(cluster);
    }
 
    return 0;
@@ -268,29 +304,9 @@ int main(){
 
    return 0;
 
-   vector<vector<int>> matrix{
-      {0,1,5,5,5,5},
-      {1,0,5,5,5,5},
-      {5,5,0,1,5,5},
-      {5,5,1,0,5,5},
-      {5,5,5,5,0,1},
-      {5,5,5,5,1,0}
-   };
+  
 
-   for(int k = 1; k < 6; k++){
-
-      pamClustering c(&matrix, k);
-      vector<vector<int>> cluster = c.berechneClustering();
-
-      for(int j = 0; j < size(cluster); j++){
-
-      cout << "Cluster Nr. " + to_string(j) + " represented durch Medoid " + to_string(c.getMedoids()[j]) + " enthaelt:" << endl;
-         for(int i = 0; i < size(cluster[j]); i++){
-            cout << "   " + to_string(cluster[j][i]) << endl;
-         } 
-      }
-      cout << "Kostenfunktion: " + to_string(c.getWertKostenfunktion()) << endl;
-   }
+  
    //pamClustering c(&matrix, 3);
    //vector<vector<int>> cluster = c.berechneClustering();
    /*

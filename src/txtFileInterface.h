@@ -29,7 +29,8 @@ class txtFileInterface{
     }
     void speichereZeitreihe(zeitreihe z, int zeitreihenAttribut, string dateiPfad);
     vector<zeitreihe>* einlesenVonZeitreihen(string ordnerPfad);
-    void speichereCluster(vector<vector<int>> distanzMatrix, vector<vector<int>> cluster);
+    void speichereDistanzmatrix(vector<vector<int>> distanzMatrix);
+    void speichereCluster(vector<vector<int>> cluster, int k);
     void speichereCluster(vector<vector<int>> distanzMatrix0, vector<vector<int>> cluster0, vector<vector<int>> distanzMatrix1, vector<vector<int>> cluster1);
     int getDimTime(){
         return dimTime;
