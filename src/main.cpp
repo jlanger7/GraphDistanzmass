@@ -26,7 +26,7 @@ void graphenZuZeitreihenTransformieren(){
    //---------------Neue Methode Kanten berechnen Testen-----------------
    vector<string> graphDateien1 = txt.getGraphdatenDateinamen(graphDatenOrdnerPfad);
    cout << "Anzahl Graphdateien im Ordner: " + to_string(size(graphDateien1)) << endl;
-   int anzahlBereitsvorhandeneGraphen = 33;
+   int anzahlBereitsvorhandeneGraphen = 0;
 
    //Erstelle eine Zeitreihe für jeden Graphen aus dem Inputdaten-Ordner
    for(int i = 0; i < size(graphDateien1); i++){
@@ -69,6 +69,99 @@ void graphenZuZeitreihenTransformieren(){
    }
 }
 
+void clusteringBerechnen(int startk, int endK, string distanzmass, vector<vector<int>> distanzMatrixGes, vector<vector<int>> distanzMatrixNrZHK,vector<vector<int>> distanzMatrixMaxZHK ,vector<vector<int>> distanzMatrixMeanVZHK){
+
+   txtFileInterface txt;
+   
+   vector<int> wertKostenfunktionGes;
+   vector<int> wertKostenfunktion0;
+   vector<int> wertKostenfunktion1;
+   vector<int> wertKostenfunktion2;
+   for(int k = 49; k < 50; k++){
+
+      pamClustering c(&distanzMatrixGes, k);
+      vector<vector<int>> cluster = c.berechneClustering();
+      cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c.getWertKostenfunktion()) << endl;
+      wertKostenfunktionGes.push_back(c.getWertKostenfunktion());
+      txt.speichereCluster(cluster, k, "AttributeGesamt_"+distanzmass, c.getWertKostenfunktion());
+
+      pamClustering c1(&distanzMatrixNrZHK, k);
+      vector<vector<int>> cluster1 = c1.berechneClustering();
+      cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c1.getWertKostenfunktion()) << endl;
+      wertKostenfunktion0.push_back(c1.getWertKostenfunktion());
+      txt.speichereCluster(cluster1, k, "Attribut0_"+distanzmass, c1.getWertKostenfunktion());
+
+      pamClustering c2(&distanzMatrixMaxZHK, k);
+      vector<vector<int>> cluster2 = c2.berechneClustering();
+      cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c2.getWertKostenfunktion()) << endl;
+      wertKostenfunktion1.push_back(c2.getWertKostenfunktion());
+      txt.speichereCluster(cluster2, k, "Attribut1_"+distanzmass, c2.getWertKostenfunktion());
+
+      pamClustering c3(&distanzMatrixMeanVZHK, k);
+      vector<vector<int>> cluster3 = c3.berechneClustering();
+      cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c3.getWertKostenfunktion()) << endl;
+      wertKostenfunktion2.push_back(c3.getWertKostenfunktion());
+      txt.speichereCluster(cluster3, k, "Attribut2_"+distanzmass, c3.getWertKostenfunktion());
+   }
+
+   txt.speichereWerteKostenfunktion(wertKostenfunktionGes, "Gesamt_"+distanzmass);
+   txt.speichereWerteKostenfunktion(wertKostenfunktion0, "Attribut0_"+distanzmass);
+   txt.speichereWerteKostenfunktion(wertKostenfunktion1, "Attribut1_"+distanzmass);
+   txt.speichereWerteKostenfunktion(wertKostenfunktion2, "Attribut2_"+distanzmass);
+}
+
+void zeitreihenDistanzmatritzenBerechnen(bool dtw){
+
+   txtFileInterface txt;
+   vector<zeitreihe>* zz = txt.einlesenVonZeitreihen(zeitreihenOrdnerPfad);
+
+   vector<vector<int>> distanzMatrixGes(size(*zz));
+   vector<vector<int>> distanzMatrixNrZHK(size(*zz));
+   vector<vector<int>> distanzMatrixMaxZHK(size(*zz));
+   vector<vector<int>> distanzMatrixMeanVZHK(size(*zz));
+   for(int i = 0; i < size(*zz); i++){
+      distanzMatrixGes[i] = vector<int>(size(*zz));
+      distanzMatrixNrZHK[i] = vector<int>(size(*zz));
+      distanzMatrixMaxZHK[i] = vector<int>(size(*zz));
+      distanzMatrixMeanVZHK[i] = vector<int>(size(*zz));
+   }
+
+   string verwendetesDistanzmass;
+   //Vergleiche jede Zeitreihe...
+   for(int i = 0; i < size(*zz); i++){
+
+      cout << "Vergleiche Zeitreihe " + to_string(i) << endl;
+      //...mit jeder Zeitreihe
+      for(int j = 0; j < size(*zz); j++){
+
+         cout << "   mit Zeitreihe " + to_string(j) << endl;
+
+         //Füge Distanzen den Distanzmatrizen hinzu
+         if(!dtw){
+            distanzMatrixGes[i][j] = (*zz)[i].berechneDiskreteFrechetDistanzND((*zz)[j].getZeitreihenWerte());
+            distanzMatrixNrZHK[i][j] = (*zz)[i].berechneDiskreteFrechetDistanz1D((*zz)[j].getZeitreihenWerte(),0);
+            distanzMatrixMaxZHK[i][j] = (*zz)[i].berechneDiskreteFrechetDistanz1D((*zz)[j].getZeitreihenWerte(),1);
+            distanzMatrixMeanVZHK[i][j] = (*zz)[i].berechneDiskreteFrechetDistanz1D((*zz)[j].getZeitreihenWerte(),2);
+            verwendetesDistanzmass = "frechet";
+         }else if(dtw){
+            distanzMatrixGes[i][j] = (*zz)[i].berechneDtwDistanzND((*zz)[j].getZeitreihenWerte());
+            distanzMatrixNrZHK[i][j] = (*zz)[i].berechneDtwDistanz1D((*zz)[j].getZeitreihenWerte(),0);
+            distanzMatrixMaxZHK[i][j] = (*zz)[i].berechneDtwDistanz1D((*zz)[j].getZeitreihenWerte(),1);
+            distanzMatrixMeanVZHK[i][j] = (*zz)[i].berechneDtwDistanz1D((*zz)[j].getZeitreihenWerte(),2);
+            verwendetesDistanzmass = "dtw";
+         }
+         //Matrizen sollten symmetrisch sein, also hier evtl auch Werte für [j][i] einfügen und oben zu Beginn pruefen, ob Wert schon
+         //berechnet wurde
+      }
+   }
+   txt.speichereDistanzmatrix(distanzMatrixGes, "AttributeGesamt_"+verwendetesDistanzmass);
+   txt.speichereDistanzmatrix(distanzMatrixNrZHK, "Attribut0_"+verwendetesDistanzmass);
+   txt.speichereDistanzmatrix(distanzMatrixMaxZHK, "Attribut1_"+verwendetesDistanzmass);
+   txt.speichereDistanzmatrix(distanzMatrixMeanVZHK, "Attribut2_"+verwendetesDistanzmass);
+
+   clusteringBerechnen(2, 50, verwendetesDistanzmass, distanzMatrixGes, distanzMatrixNrZHK, distanzMatrixMaxZHK, distanzMatrixMeanVZHK);
+}
+
 void clusterTest(){
 
    vector<vector<int>> matrix{
@@ -99,227 +192,51 @@ void clusterTest(){
 
 int main(){
 
-   txtFileInterface txt;
+   //graphenZuZeitreihenTransformieren();
 
-   vector<zeitreihe>* zz = txt.einlesenVonZeitreihen(zeitreihenOrdnerPfad);
+   zeitreihenDistanzmatritzenBerechnen(false);
+   
+   return 0;
 
-   vector<vector<int>> distanzMatrixGes1(size(*zz));
-   //vector<vector<int>> distanzMatrixMaxZHK(size(graphDateien));
-   //vector<vector<int>> distanzMatrixMeanVZHK(size(graphDateien));
-   for(int i = 0; i < size(*zz); i++){
-      distanzMatrixGes1[i] = vector<int>(size(*zz));
-      //distanzMatrixMaxZHK[i] = vector<int>(size(graphDateien));
-      //distanzMatrixMeanVZHK[i] = vector<int>(size(graphDateien));
+
+
+   
+   
+   for(int k = 26; k < 51; k++){
+
+      // pamClustering c(&distanzMatrixGes1, k);
+      // vector<vector<int>> cluster = c.berechneClustering();
+      // cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c.getWertKostenfunktion()) << endl;
+      // wertKostenfunktionGes.push_back(c.getWertKostenfunktion());
+      // txt.speichereCluster(cluster, k, "AttributeGesamt", c.getWertKostenfunktion());
+
+      /*pamClustering c1(&distanzMatrixNrZHK, k);
+      vector<vector<int>> cluster1 = c1.berechneClustering();
+      cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c1.getWertKostenfunktion()) << endl;
+      wertKostenfunktion0.push_back(c1.getWertKostenfunktion());
+      txt.speichereCluster(cluster1, k, "Attribut0", c1.getWertKostenfunktion());
+
+      pamClustering c2(&distanzMatrixMaxZHK, k);
+      vector<vector<int>> cluster2 = c2.berechneClustering();
+      cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c2.getWertKostenfunktion()) << endl;
+      wertKostenfunktion1.push_back(c2.getWertKostenfunktion());
+      txt.speichereCluster(cluster2, k, "Attribut1", c2.getWertKostenfunktion());*/
+
+      // pamClustering c3(&distanzMatrixMeanVZHK, k);
+      // vector<vector<int>> cluster3 = c3.berechneClustering();
+      // cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c3.getWertKostenfunktion()) << endl;
+      // wertKostenfunktion2.push_back(c3.getWertKostenfunktion());
+      // txt.speichereCluster(cluster3, k, "Attribut2", c3.getWertKostenfunktion());
    }
 
-   //Vergleiche jede Zeitreihe...
-   for(int i = 0; i < size(*zz); i++){
-
-      cout << "Vergleiche Zeitreihe " + to_string(i) << endl;
-      //...mit jeder Zeitreihe
-      for(int j = 0; j < size(*zz); j++){
-
-         cout << "   mit Zeitreihe " + to_string(j) << endl;
-
-         //Füge Distanzen den Distanzmatrizen hinzu
-         distanzMatrixGes1[i][j] = (*zz)[i].berechneDtwDistanzND((*zz)[j].getZeitreihenWerte());
-         //distanzMatrixMaxZHK[i][j] = zeitreihen[i].berechneDtwDistanz1D(zeitreihen[j].getZeitreihenWerte(),1);
-         //distanzMatrixMeanVZHK[i][j] = zeitreihen[i].berechneDtwDistanz1D(zeitreihen[j].getZeitreihenWerte(),2);
-         //Matrizen sollten symmetrisch sein, also hier evtl auch Werte für [j][i] einfügen und oben zu Beginn pruefen, ob Wert schon
-         //berechnet wurde
-
-      }
-   }
-   delete zz;
-
-   // for(int i = 0; i < size(distanzMatrixGes1); i++){
-   //    for(int j = 0; j < size(distanzMatrixGes1[i]); j++){
-
-   //       cout << distanzMatrixGes1[i][j] << "   ";
-   //    }
-   //    cout << endl;
-   // }
-
-   txt.speichereDistanzmatrix(distanzMatrixGes1);
-
-   for(int k = 2; k < 50; k++){
-
-      pamClustering c(&distanzMatrixGes1, k);
-      vector<vector<int>> cluster = c.berechneClustering();
-      cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c.getWertKostenfunktion()) << endl;
-      txt.speichereCluster(cluster, k);
-   }
+   //txt.speichereWerteKostenfunktion(wertKostenfunktionGes, "Gesamt");
+   //txt.speichereWerteKostenfunktion(wertKostenfunktion0, "Attribut0");
+   //txt.speichereWerteKostenfunktion(wertKostenfunktion1, "Attribut1");
+   //txt.speichereWerteKostenfunktion(wertKostenfunktion2, "Attribut2");
 
 
    return 0;
 
-   vector<string> graphDateien = txt.getGraphdatenDateinamen(graphDatenOrdnerPfad);
-   cout << "Anzahl Graphdateien im Ordner: " + to_string(size(graphDateien)) << endl;
-   
-   vector<vector<int>> distanzMatrixGes(size(graphDateien));
-   //vector<vector<int>> distanzMatrixMaxZHK(size(graphDateien));
-   //vector<vector<int>> distanzMatrixMeanVZHK(size(graphDateien));
-   for(int i = 0; i < size(graphDateien); i++){
-      distanzMatrixGes[i] = vector<int>(size(graphDateien));
-      //distanzMatrixMaxZHK[i] = vector<int>(size(graphDateien));
-      //distanzMatrixMeanVZHK[i] = vector<int>(size(graphDateien));
-   }
-
-   vector<zeitreihe> zeitreihen;
-
-   //Erstelle eine Zeitreihe für jeden Graphen aus dem Inputdaten-Ordner
-   for(int i = 0; i < size(graphDateien); i++){
-
-      cout << "Erstelle Zeitreihe fuer Graph " + to_string(i) << endl;
-      //----------------Erstelle die erste Zeitreihe-----------------------
-      //Erstelle eine Knotenliste aus der Inputdatei für den aktuell betrachteten Graphen, inkl. Zeitschrittattribut für jeden Knoten
-      vector<knoten*> knotenListe1 = txt.readInNodes(graphDatenOrdnerPfad + "\\" + graphDateien[i]);
-      //Berechne die Kanten aus der Inputdatei für den aktuell betrachteten Graphen und speichere sie in den Adjazenzlisten der Knoten
-      txt.berechneKanten(&knotenListe1);
-      //Initialisiere einen Graphen mit der erstellten Knotenliste
-      graph* g1 = new graph(knotenListe1);
-      cout << "   Graph initialisiert Main" << endl;
-      //Initialisiere Teilgraphenset, dass für jeden Zeitschritt im Graphen einen Teilgraphen enthält
-      teilgraphenSet* tgSet1 = new teilgraphenSet(g1);
-      cout << "   TG-Set initialisiert Main" << endl;
-      //Führe die mod. Tiefensuche auf jedem dieser Teilgraphen durch
-      for(int z = 0; z < size((*tgSet1).getTeilgraphen()); z++){
-         (*tgSet1).getTeilgraphen()[z].modifizierteTiefensuche();
-      }
-      //Initialisiere eine Zeitreihe für die Teilgraphen
-      zeitreihe z1(tgSet1);
-      //z1.printZeitreihe();
-      txt.speichereZeitreihe(z1, 0, zeitreihenOrdnerPfad+"\\" + "graphNr" + to_string(i) + "_attributNr0_" + graphDateien[i]);
-      txt.speichereZeitreihe(z1, 1, zeitreihenOrdnerPfad+"\\" + "graphNr" + to_string(i) + "_attributNr1_" + graphDateien[i]);
-      txt.speichereZeitreihe(z1, 2, zeitreihenOrdnerPfad+"\\" + "graphNr" + to_string(i) + "_attributNr2_" + graphDateien[i]);
-
-      //Füge Zeitreihe dem Zeitreihen-Vektor hinzu fürs spätere vergleichen
-      zeitreihen.push_back(z1);
-
-      //Speicher deallokieren
-      for(int k = 0; k < size(knotenListe1); k++){
-         delete knotenListe1[k];
-      }
-
-
-   }
-
-   //Vergleiche jede Zeitreihe...
-   for(int i = 0; i < size(graphDateien); i++){
-
-      cout << "Vergleiche Zeitreihe " + to_string(i) << endl;
-      //...mit jeder Zeitreihe
-      for(int j = 0; j < size(graphDateien); j++){
-
-         cout << "   mit Zeitreihe " + to_string(j) << endl;
-
-         //Füge Distanzen den Distanzmatrizen hinzu
-         distanzMatrixGes[i][j] = zeitreihen[i].berechneDtwDistanzND(zeitreihen[j].getZeitreihenWerte());
-         //distanzMatrixMaxZHK[i][j] = zeitreihen[i].berechneDtwDistanz1D(zeitreihen[j].getZeitreihenWerte(),1);
-         //distanzMatrixMeanVZHK[i][j] = zeitreihen[i].berechneDtwDistanz1D(zeitreihen[j].getZeitreihenWerte(),2);
-         //Matrizen sollten symmetrisch sein, also hier evtl auch Werte für [j][i] einfügen und oben zu Beginn pruefen, ob Wert schon
-         //berechnet wurde
-
-      }
-   }
-
-   /*cout << "Distanzen Anzahl ZHK" << endl;
-   for(int i = 0; i < size(distanzMatrixNrZHK); i++){
-      for(int j = 0; j < size(distanzMatrixNrZHK[i]); j++){
-
-         cout << to_string(i) + " zu " + to_string(j) + " = " + to_string(distanzMatrixNrZHK[i][j]) << endl;
-      }
-   }
-   cout << "Distanzen Max. ZHK" << endl;
-   for(int i = 0; i < size(distanzMatrixMaxZHK); i++){
-      for(int j = 0; j < size(distanzMatrixMaxZHK[i]); j++){
-
-         cout << to_string(i) + " zu " + to_string(j) + " = " + to_string(distanzMatrixMaxZHK[i][j]) << endl;
-      }
-   }*/
-/*
-   pamClustering clusteringAttribut0(&distanzMatrixNrZHK, 3);
-   vector<vector<int>> cluster0 = clusteringAttribut0.berechneClustering(); 
-   pamClustering clusteringAttribut1(&distanzMatrixMaxZHK, 3);
-   vector<vector<int>> cluster1 = clusteringAttribut1.berechneClustering();
-
-   txt.speichereCluster(distanzMatrixNrZHK, cluster0, distanzMatrixMaxZHK, cluster1);
-*/
-
-
-   for(int k = 1; k < 10; k++){
-
-      pamClustering c(&distanzMatrixGes, k);
-      vector<vector<int>> cluster = c.berechneClustering();
-      cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c.getWertKostenfunktion());
-      //txt.speichereCluster(cluster);
-   }
-
-   return 0;
-
-   vector<knoten*> knotenListe1 = txt.readInNodes("C:\\Users\\Jonathan Langer\\Desktop\\SHK Job\\VS Projects\\data\\comparingProcessedData\\20170603._component5_.txt");
-   cout << size(knotenListe1) << endl;
-   txt.berechneKanten(&knotenListe1);
-   graph* g1 = new graph(knotenListe1);
-   std::cout << "Zeit Knoten eins: " + to_string((*(*g1).getKnotenMenge()[0]).getZeitAttribut()) << endl;
-   teilgraphenSet* tgSet1 = new teilgraphenSet(g1);
-   
-   std::cout << "MAIN was here: " + to_string(__LINE__) << endl;
-   (*tgSet1).erstelleTeilgraphenSet();
-
-   for(int i = 0; i < size((*tgSet1).getTeilgraphen()); i++){
-
-      (*tgSet1).getTeilgraphen()[i].modifizierteTiefensuche();
-   }
-   
-   std::cout << "MAIN was here: " + to_string(__LINE__) << endl;
-
-   zeitreihe z1(tgSet1);
-   z1.printZeitreihe();
-
-
-
-   vector<knoten*> knotenListe2 = txt.readInNodes("C:\\Users\\Jonathan Langer\\Desktop\\SHK Job\\VS Projects\\data\\comparingProcessedData\\20170603._component5_3.txt");
-   cout << size(knotenListe2) << endl;
-   txt.berechneKanten(&knotenListe2);
-   graph* g2 = new graph(knotenListe2);
-   teilgraphenSet* tgSet2 = new teilgraphenSet(g2);
-   std::cout << "MAIN was here: " + to_string(__LINE__) << endl;
-   (*tgSet2).erstelleTeilgraphenSet();
-   for(int i = 0; i < size((*tgSet2).getTeilgraphen()); i++){
-
-      (*tgSet2).getTeilgraphen()[i].modifizierteTiefensuche();
-   }
-   std::cout << "MAIN was here: " + to_string(__LINE__) << endl;
-   zeitreihe z2(tgSet2);
-   z2.printZeitreihe();
-
-   std::cout << "DTW Attribut #ZHK: " + to_string(z1.berechneDtwDistanz1D(z2.getZeitreihenWerte(),0)) << endl;
-   std::cout << "DTW Attribut max V: " + to_string(z1.berechneDtwDistanz1D(z2.getZeitreihenWerte(),1)) << endl;
-
-
-
-   std::cout << "MAIN was here: " + to_string(__LINE__) << endl;
-   
-
-   return 0;
-
-  
-
-  
-   //pamClustering c(&matrix, 3);
-   //vector<vector<int>> cluster = c.berechneClustering();
-   /*
-   cout << "zurueck in main" << endl;
-   for(int k = 0; k < size(cluster); k++){
-
-      cout << "Cluster Nr. " + to_string(k) + " represented durch Medoid " + to_string(c.getMedoids()[k]) + " enthaelt:" << endl;
-      for(int i = 0; i < size(cluster[k]); i++){
-         cout << "   " + to_string(cluster[k][i]) << endl;
-      } 
-   }
-   cout << "Kostenfunktion: " + to_string(c.getWertKostenfunktion()) << endl;
-   */
 }
 
 

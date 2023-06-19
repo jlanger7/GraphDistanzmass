@@ -135,6 +135,7 @@ vector<knoten*> txtFileInterface::readInNodes(string dateiPfad){
    
    file.close();
    cout << "Knoten eingelesen" << endl;
+   anzahlKnoten.push_back(size(knotenListe));
    return knotenListe;
 };
 
@@ -320,7 +321,7 @@ vector<zeitreihe>* txtFileInterface::einlesenVonZeitreihen(string ordnerPfad){
     return zeitreihen;    
 };
 
-void txtFileInterface::speichereDistanzmatrix(vector<vector<int>> distanzMatrix){
+void txtFileInterface::speichereDistanzmatrix(vector<vector<int>> distanzMatrix, string distanzMatrixBezeichner){
 
     cout << "speichere Distanzmatrix" << endl;
 
@@ -329,15 +330,7 @@ void txtFileInterface::speichereDistanzmatrix(vector<vector<int>> distanzMatrix)
     std::stringstream datetime;
     datetime << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d_%H-%M-%S");
 
-    ofstream myfile(pfadOutput + "\\GraphZuordnungUndDistanzmatritzen_" + datetime.str() + ".txt");
-
-    //schreibe Zuordnung der Graph Nr zu Dateiname weg
-    for(int i = 0; i < size(graphDateiZuordnung); i++){
-
-        myfile << "Graph Nr. " + to_string(i) + " = " + graphDateiZuordnung[i] << endl;
-    }
-    myfile << endl;
-    myfile << "Distanzmatrix Gesamtattirbute" << endl;
+    ofstream myfile(pfadOutput + "\\Distanzmatrix_" + distanzMatrixBezeichner + "_" + datetime.str() + ".txt");
 
     //schreibe Distanzmatrix weg
     for(int i = 0; i < size(distanzMatrix); i++){
@@ -364,7 +357,49 @@ void txtFileInterface::speichereDistanzmatrix(vector<vector<int>> distanzMatrix)
     myfile.close();
 };
 
-void txtFileInterface::speichereCluster(vector<vector<int>> cluster, int k){
+vector<vector<int>> txtFileInterface::einlesenVonDistanzmatrix(string matrixBezeichner, int dimension){
+
+    vector<string> dateien;
+    for (const auto & file: directory_iterator(pfadOutput)) { 
+
+        //string dateiPfad(file.path().generic_string());
+        dateien.push_back(file.path().generic_string());
+    }
+
+    vector<vector<int>> distanzMatrix(dimension);
+    for(int i = 0; i < dimension; i++){
+        distanzMatrix[i] = vector<int>(dimension);
+    }
+    for(int d = 0; d < size(dateien); d++){
+
+        if(dateien[d].find("Distanzmatrix") != std::string::npos && dateien[d].find(matrixBezeichner) != std::string::npos){
+
+            cout << "datei gefunden: " + dateien[d] << endl;
+
+            ifstream file(dateien[d]);
+            int number;
+            int i = 0;
+            int j = 0;
+            while(file >> number) {
+                
+                
+
+                distanzMatrix[i][j] = number;
+                if(number == 0){
+                cout << "Distanz 0 in Spalte: " + to_string(j) << endl;    
+                }
+                j += 1;
+                if (j == 194){
+                    i += 1;
+                    j = 0;
+                }
+            }
+        }
+    }
+    return distanzMatrix;
+};
+
+void txtFileInterface::speichereCluster(vector<vector<int>> cluster, int k, string clusterBezeichner, int wertKostenfunktion){
 
     cout << "   speichere Cluster" << endl;
 
@@ -373,7 +408,7 @@ void txtFileInterface::speichereCluster(vector<vector<int>> cluster, int k){
     std::stringstream datetime;
     datetime << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d_%H-%M-%S");
 
-    ofstream myfile2(pfadOutput + "\\" + to_string(k) + "_clusterAttributeGesamt_" + datetime.str() + ".txt");
+    ofstream myfile2(pfadOutput + "\\k_" + to_string(k) + "_cluster_"+ clusterBezeichner + "_" + datetime.str() + ".txt");
 
     for(int i = 0; i < size(cluster); i++){
         for(int j = 0; j < size(cluster[i]); j++){
@@ -382,6 +417,27 @@ void txtFileInterface::speichereCluster(vector<vector<int>> cluster, int k){
         }
         myfile2 << "-" << endl;
     }
+    //myfile2 << "Wert Kostenfunktion: " + to_string(wertKostenfunktion) << endl; 
+
+    myfile2.close();
+}
+
+void txtFileInterface::speichereWerteKostenfunktion(vector<int> werteKostenfunktion, string bezeichner){
+
+    cout << "   speichere WerteKostenfunktion" << endl;
+
+    auto now = std::chrono::system_clock::now();
+    auto in_time_t = std::chrono::system_clock::to_time_t(now);
+    std::stringstream datetime;
+    datetime << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d_%H-%M-%S");
+
+    ofstream myfile2(pfadOutput + "\\" + "WerteKostenfunktion_Cluster_"+ bezeichner + "_" + datetime.str() + ".txt");
+
+    for(int i = 0; i < size(werteKostenfunktion); i++){
+        myfile2 << werteKostenfunktion[i] << " ";
+    }
+    //myfile2 << "Wert Kostenfunktion: " + to_string(wertKostenfunktion) << endl; 
+
     myfile2.close();
 }
 
@@ -474,4 +530,27 @@ void txtFileInterface::speichereCluster(vector<vector<int>> distanzMatrix0, vect
         myfile3 << "-" << endl;
     }
     myfile3.close();
+};
+
+void txtFileInterface::graphZuordnungUndAnzahlKnoten(){
+
+    cout << "speichere graphZuordnungUndAnzahlKnoten" << endl;
+
+    auto now = std::chrono::system_clock::now();
+    auto in_time_t = std::chrono::system_clock::to_time_t(now);
+    std::stringstream datetime;
+    datetime << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d_%H-%M-%S");
+
+    cout << "datetime berechnet" << endl;
+    
+    ofstream myfile(pfadOutput + "\\GraphZuordnungUndAnzahlKnoten_" + datetime.str() + ".txt");
+
+    //schreibe Zuordnung der Graph Nr zu Dateiname weg
+    for(int i = 0; i < size(graphDateiZuordnung); i++){
+
+        myfile << "Graph Nr. " + to_string(i) + " = " + graphDateiZuordnung[i] + " - Anzahl Knoten: " + to_string(anzahlKnoten[i]) << endl;
+    }
+    myfile << endl;
+
+    cout << "Done speichere graphZuordnungUndAnzahlKnoten" << endl;
 };
