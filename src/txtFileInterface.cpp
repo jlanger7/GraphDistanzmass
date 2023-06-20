@@ -346,6 +346,44 @@ void txtFileInterface::speichereDistanzmatrix(vector<vector<int>> distanzMatrix,
                 d += 1;
             }
             int spaceNr = 10 - d;
+            cout << "speichere Wert: " + to_string(distanzMatrix[i][j]) << endl;
+            myfile << distanzMatrix[i][j] ;
+            for(int d = 0; d < spaceNr; d++){
+                myfile << " ";
+            }
+        }
+        myfile << endl;
+    }
+    myfile << endl;
+    myfile.close();
+};
+
+void txtFileInterface::speichereDistanzmatrix(vector<vector<float>> distanzMatrix, string distanzMatrixBezeichner){
+
+    cout << "speichere Distanzmatrix" << endl;
+
+    auto now = std::chrono::system_clock::now();
+    auto in_time_t = std::chrono::system_clock::to_time_t(now);
+    std::stringstream datetime;
+    datetime << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d_%H-%M-%S");
+
+    ofstream myfile(pfadOutput + "\\Distanzmatrix_" + distanzMatrixBezeichner + "_" + datetime.str() + ".txt");
+
+    //schreibe Distanzmatrix weg
+    for(int i = 0; i < size(distanzMatrix); i++){
+        for(int j = 0; j < size(distanzMatrix[i]); j++){
+
+            int zahl = distanzMatrix[i][j];
+            int d = 0; 
+            if(zahl == 0){
+                d = 1;
+            }
+            while(zahl > 0){
+                zahl = zahl/10;
+                d += 1;
+            }
+            int spaceNr = 10 - d;
+            cout << "speichere Wert: " + to_string(distanzMatrix[i][j]) << endl;
             myfile << distanzMatrix[i][j] ;
             for(int d = 0; d < spaceNr; d++){
                 myfile << " ";
