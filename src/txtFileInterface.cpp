@@ -288,7 +288,7 @@ vector<zeitreihe>* txtFileInterface::einlesenVonZeitreihen(string ordnerPfad){
 
         zeitreihe z;
         vector<vector<int>> zeitreihenWerte;
-        for(int j = 0; j < 3; j++){
+        for(int j = 0; j < 2; j++){
             for(int k = 0; k < size(zeitreihenDateien); k++){
                 
                 if(zeitreihenDateien[k].find("graphNr"+to_string(i)+"_") != std::string::npos && zeitreihenDateien[k].find("attributNr"+to_string(j)+"_") != std::string::npos){
@@ -346,7 +346,7 @@ void txtFileInterface::speichereDistanzmatrix(vector<vector<int>> distanzMatrix,
                 d += 1;
             }
             int spaceNr = 10 - d;
-            cout << "speichere Wert: " + to_string(distanzMatrix[i][j]) << endl;
+            //cout << "speichere Wert: " + to_string(distanzMatrix[i][j]) << endl;
             myfile << distanzMatrix[i][j] ;
             for(int d = 0; d < spaceNr; d++){
                 myfile << " ";
@@ -382,7 +382,7 @@ void txtFileInterface::speichereDistanzmatrix(vector<vector<float>> distanzMatri
                 zahl = zahl/10;
                 d += 1;
             }
-            int spaceNr = 10 - d;
+            int spaceNr = 15 - d;
             cout << "speichere Wert: " + to_string(distanzMatrix[i][j]) << endl;
             myfile << distanzMatrix[i][j] ;
             for(int d = 0; d < spaceNr; d++){
@@ -395,7 +395,7 @@ void txtFileInterface::speichereDistanzmatrix(vector<vector<float>> distanzMatri
     myfile.close();
 };
 
-vector<vector<int>> txtFileInterface::einlesenVonDistanzmatrix(string matrixBezeichner, int dimension){
+vector<vector<float>> txtFileInterface::einlesenVonDistanzmatrix(string matrixBezeichner, int dimension){
 
     vector<string> dateien;
     for (const auto & file: directory_iterator(pfadOutput)) { 
@@ -404,9 +404,9 @@ vector<vector<int>> txtFileInterface::einlesenVonDistanzmatrix(string matrixBeze
         dateien.push_back(file.path().generic_string());
     }
 
-    vector<vector<int>> distanzMatrix(dimension);
+    vector<vector<float>> distanzMatrix(dimension);
     for(int i = 0; i < dimension; i++){
-        distanzMatrix[i] = vector<int>(dimension);
+        distanzMatrix[i] = vector<float>(dimension);
     }
     for(int d = 0; d < size(dateien); d++){
 
@@ -415,7 +415,7 @@ vector<vector<int>> txtFileInterface::einlesenVonDistanzmatrix(string matrixBeze
             cout << "datei gefunden: " + dateien[d] << endl;
 
             ifstream file(dateien[d]);
-            int number;
+            float number;
             int i = 0;
             int j = 0;
             while(file >> number) {
@@ -423,11 +423,12 @@ vector<vector<int>> txtFileInterface::einlesenVonDistanzmatrix(string matrixBeze
                 
 
                 distanzMatrix[i][j] = number;
+                cout << "nr " + to_string(number) << endl;
                 if(number == 0){
                 cout << "Distanz 0 in Spalte: " + to_string(j) << endl;    
                 }
                 j += 1;
-                if (j == 194){
+                if (j == dimension){
                     i += 1;
                     j = 0;
                 }
@@ -460,7 +461,7 @@ void txtFileInterface::speichereCluster(vector<vector<int>> cluster, int k, stri
     myfile2.close();
 }
 
-void txtFileInterface::speichereWerteKostenfunktion(vector<int> werteKostenfunktion, string bezeichner){
+void txtFileInterface::speichereWerteKostenfunktion(vector<float> werteKostenfunktion, string bezeichner){
 
     cout << "   speichere WerteKostenfunktion" << endl;
 

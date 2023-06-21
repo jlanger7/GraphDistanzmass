@@ -17,7 +17,7 @@ graph::graph(vector<knoten*>& knotenMengeIn){
 
 void graph::modifizierteTiefensucheNeu(){
 
-    int aktNrZhks = 0, tmpMaxV = 0, tmpMeanV = 0;
+    int aktNrZhks = 0, tmpMaxV = 0, tmpGesV = 0;
     for(int v = 0; v < size(knotenMenge); v++){
         
         knoten* startKnoten = knotenMenge[v];
@@ -58,13 +58,13 @@ void graph::modifizierteTiefensucheNeu(){
             if(tmpMaxV == 0 || tmpNrV > tmpMaxV){
                 tmpMaxV = tmpNrV;
             }
-            tmpMeanV += tmpNrV;
+            tmpGesV += tmpNrV;
             //cout << "       DONE mod.TiefensucheNeu Anzahl Zhks: " + to_string(aktNrZhks) << endl;
         }
     }
     anzahlZhk = aktNrZhks;
     maxVZhk = tmpMaxV;
-    meanVZhk = tmpMeanV/anzahlZhk;
+    gesVt = tmpGesV;
     cout << "   DONE mod.TiefensucheNeu" << endl;
 };
 
@@ -92,7 +92,7 @@ void graph::modifizierteTiefensuche(){
     }
     anzahlZhk = aktNrZhks;
     maxVZhk = tmpMaxV;
-    meanVZhk = tmpMeanV/anzahlZhk;
+    gesVt = tmpMeanV;
 };
 
 void graph::durchsucheNachbarn(knoten& v, vector<knoten*>& adjazenzListe, int &aktNrZhks, int &tmpNrV){

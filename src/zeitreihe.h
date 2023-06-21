@@ -20,11 +20,11 @@ class zeitreihe{
     float berechneDtwDistanzND(vector<vector<int>> q);
     float berechneDtwDistanzFunktionswertND(vector<vector<int>> q, float** caIn, int i , int j);
     float canberraDistance(vector<int> p, vector<int> q);
-    int berechneDiskreteFrechetDistanz1D(vector<vector<int>> q, int attribut);
-    int berechneDiskreteFrechetDistanzFunktionswert1D(vector<vector<int>> q, int** caIn, int i , int j, int attribut);
-    int berechneDtwDistanz1D(vector<vector<int>> q, int attribut);
-    int berechneDtwDistanzFunktionswert1D(vector<vector<int>> q, int** caIn, int i , int j, int attribut);
-    int d(vector<int> p, vector<int> q, int attribut);
+    float berechneDiskreteFrechetDistanz1D(vector<vector<int>> q, int attribut);
+    float berechneDiskreteFrechetDistanzFunktionswert1D(vector<vector<int>> q, int** caIn, int i , int j, int attribut);
+    float berechneDtwDistanz1D(vector<vector<int>> q, int attribut);
+    float berechneDtwDistanzFunktionswert1D(vector<vector<int>> q, int** caIn, int i , int j, int attribut);
+    float d(vector<int> p, vector<int> q, int attribut);
     void setZeitreihenWerte(vector<vector<int>> in){
         zeitreihenWerte = in;
     };

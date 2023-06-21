@@ -32,9 +32,9 @@ class txtFileInterface{
     vector<zeitreihe>* einlesenVonZeitreihen(string ordnerPfad);
     void speichereDistanzmatrix(vector<vector<int>> distanzMatrix, string distanzMatrixBezeichner);
     void speichereDistanzmatrix(vector<vector<float>> distanzMatrix, string distanzMatrixBezeichner);
-    vector<vector<int>> einlesenVonDistanzmatrix(string matrixBezeichner, int dimension);
+    vector<vector<float>> einlesenVonDistanzmatrix(string matrixBezeichner, int dimension);
     void speichereCluster(vector<vector<int>> cluster, int k, string clusterBezeichner, int wertKostenfunktion);
-    void speichereWerteKostenfunktion(vector<int> werteKostenfunktion, string bezeichner);
+    void speichereWerteKostenfunktion(vector<float> werteKostenfunktion, string bezeichner);
     void speichereCluster(vector<vector<int>> distanzMatrix0, vector<vector<int>> cluster0, vector<vector<int>> distanzMatrix1, vector<vector<int>> cluster1);
     void graphZuordnungUndAnzahlKnoten();
     int getDimTime(){

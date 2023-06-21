@@ -3,7 +3,7 @@
 #include "pamClustering.h"
 using namespace std;
 
-pamClustering::pamClustering(vector<vector<int>>* distanzMatrixIn, int kIn){
+pamClustering::pamClustering(vector<vector<float>>* distanzMatrixIn, int kIn){
 
     distanzMatrix = distanzMatrixIn;
     k = kIn;
@@ -61,7 +61,7 @@ void pamClustering::init(){
                 int objektJ = nichtSelektierteObjekte[j];
                 //erhöhe Gewinnsumme um die Distanz von Objekt j zum nächsten bereits gewählten Medoid abzüglich der Distanz zu Objekt i, falls Wert > 0 ist.
                 int dj = getDistanzZumNaechstenGewaehltenMedoid(objektJ);
-                summeGewinnObjektI += max((dj - (*distanzMatrix)[objektI][objektJ]), 0);
+                summeGewinnObjektI += max((dj - (*distanzMatrix)[objektI][objektJ]), (float)0);
             }
             //aktualisiere das temporäre Maximum
             if(i == 0 || summeGewinnObjektI > tmpMaxGewinn){

@@ -16,7 +16,7 @@ zeitreihe::zeitreihe(teilgraphenSet* teilgraphenIn){
         vector<int> vecTmp;
         vecTmp.push_back((*teilgraphenIn).getTeilgraphen()[i].getAnzahlZhk());
         vecTmp.push_back((*teilgraphenIn).getTeilgraphen()[i].getMaxVZhk());
-        vecTmp.push_back((*teilgraphenIn).getTeilgraphen()[i].getMeanVZhk());
+        vecTmp.push_back((*teilgraphenIn).getTeilgraphen()[i].getGesVt());
 
         zeitreihenWerte.push_back(vecTmp);
     }
@@ -138,7 +138,7 @@ float zeitreihe::canberraDistance(vector<int> p, vector<int> q){
     return dist;
 };
 
-int zeitreihe::berechneDiskreteFrechetDistanz1D(vector<vector<int>> q, int attribut){
+float zeitreihe::berechneDiskreteFrechetDistanz1D(vector<vector<int>> q, int attribut){
 
     int** ca = new int*[size(zeitreihenWerte)];
     for(int i = 0; i < size(zeitreihenWerte); i++){
@@ -153,7 +153,7 @@ int zeitreihe::berechneDiskreteFrechetDistanz1D(vector<vector<int>> q, int attri
     return ca[size(zeitreihenWerte)-1][size(q)-1];
 };
 
-int zeitreihe::berechneDiskreteFrechetDistanzFunktionswert1D(vector<vector<int>> q, int** caIn, int i , int j, int attribut){
+float zeitreihe::berechneDiskreteFrechetDistanzFunktionswert1D(vector<vector<int>> q, int** caIn, int i , int j, int attribut){
 
     if(caIn[i][j] > -1){
         return caIn[i][j];
@@ -171,7 +171,7 @@ int zeitreihe::berechneDiskreteFrechetDistanzFunktionswert1D(vector<vector<int>>
     }
 };
 
-int zeitreihe::berechneDtwDistanz1D(vector<vector<int>> q, int attribut){
+float zeitreihe::berechneDtwDistanz1D(vector<vector<int>> q, int attribut){
 
     int** ca = new int*[size(zeitreihenWerte)];
     for(int i = 0; i < size(zeitreihenWerte); i++){
@@ -194,7 +194,7 @@ int zeitreihe::berechneDtwDistanz1D(vector<vector<int>> q, int attribut){
     return output;
 };
 
-int zeitreihe::berechneDtwDistanzFunktionswert1D(vector<vector<int>> q, int** caIn, int i , int j, int attribut){
+float zeitreihe::berechneDtwDistanzFunktionswert1D(vector<vector<int>> q, int** caIn, int i , int j, int attribut){
 
     if(caIn[i][j] > -1){
         return caIn[i][j];
@@ -212,7 +212,7 @@ int zeitreihe::berechneDtwDistanzFunktionswert1D(vector<vector<int>> q, int** ca
     }
 };
 
-int zeitreihe::d(vector<int> p, vector<int> q, int attribut){
+float zeitreihe::d(vector<int> p, vector<int> q, int attribut){
 
     return abs(p[attribut] - q[attribut]);
 }
