@@ -12,6 +12,8 @@ class graph{
     int anzahlZhk;
     int maxVZhk;
     int gesVt;
+    int meanVt;
+    double meanNrNachbarn;
     vector<vector<knoten*>> zhkKnotenMengen;
 
 
@@ -34,6 +36,12 @@ class graph{
     };
     int getGesVt(){
         return gesVt;
+    };
+    int getMeanVt(){
+        return meanVt;
+    };
+    double getMeanNrNachbarn(){
+        return meanNrNachbarn;
     };
 
 

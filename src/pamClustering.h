@@ -7,7 +7,7 @@ using namespace std;
 class pamClustering{
 
     private:
-    vector<vector<float>>* distanzMatrix;
+    vector<vector<double>>* distanzMatrix;
     int k;
     vector<int> medoids;
     vector<int> nichtSelektierteObjekte;
@@ -16,7 +16,7 @@ class pamClustering{
 
 
     public:
-    pamClustering(vector<vector<float>>* distanzMatrixIn, int kIn);
+    pamClustering(vector<vector<double>>* distanzMatrixIn, int kIn);
     void init();
     int getDistanzZumNaechstenGewaehltenMedoid(int objekt);
     int getDistanzZumWeitestenGewaehltenMedoidAusserI(int objekt, int medoidI);

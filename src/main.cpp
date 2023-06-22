@@ -75,14 +75,14 @@ void graphenZuZeitreihenTransformieren(){
    }
 }
 
-void clusteringBerechnen(int startk, int endK, string distanzmass, vector<vector<float>> distanzMatrixGes, vector<vector<float>> distanzMatrixNrZHK,vector<vector<float>> distanzMatrixMaxZHK ,vector<vector<float>> distanzMatrixGesVt){
+void clusteringBerechnen(int startk, int endK, string distanzmass, vector<vector<double>> distanzMatrixGes, vector<vector<double>> distanzMatrixNrZHK,vector<vector<double>> distanzMatrixMaxZHK ,vector<vector<double>> distanzMatrixGesVt){
 
    txtFileInterface txt;
    
-   vector<float> wertKostenfunktionGes;
-   vector<float> wertKostenfunktion0;
-   vector<float> wertKostenfunktion1;
-   vector<float> wertKostenfunktion2;
+   vector<double> wertKostenfunktionGes;
+   vector<double> wertKostenfunktion0;
+   vector<double> wertKostenfunktion1;
+   vector<double> wertKostenfunktion2;
    for(int k = startk; k < endK+1; k++){
 
       pamClustering c(&distanzMatrixGes, k);
@@ -121,15 +121,15 @@ void zeitreihenDistanzmatritzenBerechnen(bool dtw){
    txtFileInterface txt;
    vector<zeitreihe>* zz = txt.einlesenVonZeitreihen(zeitreihenOrdnerPfad);
 
-   vector<vector<float>> distanzMatrixGes(size(*zz));
-   vector<vector<float>> distanzMatrixNrZHK(size(*zz));
-   vector<vector<float>> distanzMatrixMaxZHK(size(*zz));
-   vector<vector<float>> distanzMatrixGesVt(size(*zz));
+   vector<vector<double>> distanzMatrixGes(size(*zz));
+   vector<vector<double>> distanzMatrixNrZHK(size(*zz));
+   vector<vector<double>> distanzMatrixMaxZHK(size(*zz));
+   vector<vector<double>> distanzMatrixGesVt(size(*zz));
    for(int i = 0; i < size(*zz); i++){
-      distanzMatrixGes[i] = vector<float>(size(*zz));
-      distanzMatrixNrZHK[i] = vector<float>(size(*zz));
-      distanzMatrixMaxZHK[i] = vector<float>(size(*zz));
-      distanzMatrixGesVt[i] = vector<float>(size(*zz));
+      distanzMatrixGes[i] = vector<double>(size(*zz));
+      distanzMatrixNrZHK[i] = vector<double>(size(*zz));
+      distanzMatrixMaxZHK[i] = vector<double>(size(*zz));
+      distanzMatrixGesVt[i] = vector<double>(size(*zz));
    }
 
    string verwendetesDistanzmass;
@@ -170,7 +170,7 @@ void zeitreihenDistanzmatritzenBerechnen(bool dtw){
 
 void clusterTest(){
 
-   vector<vector<float>> matrix{
+   vector<vector<double>> matrix{
       {0,1,5,5,5,5},
       {1,0,5,5,5,5},
       {5,5,0,1,5,5},
@@ -201,12 +201,12 @@ int main(){
    graphenZuZeitreihenTransformieren();
 
    zeitreihenDistanzmatritzenBerechnen(true);
-   //zeitreihenDistanzmatritzenBerechnen(false);
+   zeitreihenDistanzmatritzenBerechnen(false);
 
    //txtFileInterface txt;
 
-   //vector<vector<float>> distanzMatrixGes = txt.einlesenVonDistanzmatrix("AttributeGesamt_frechet", 6);
-   //vector<vector<float>> distanzMatrixNrZHK = txt.einlesenVonDistanzmatrix("Attribut0_frechet", 6);
+   //vector<vector<double>> distanzMatrixGes = txt.einlesenVonDistanzmatrix("AttributeGesamt_frechet", 6);
+   //vector<vector<double>> distanzMatrixNrZHK = txt.einlesenVonDistanzmatrix("Attribut0_frechet", 6);
    // vector<vector<int>> distanzMatrixMaxZHK = txt.einlesenVonDistanzmatrix("Attribut1_frechet", 194);;
    // vector<vector<int>> distanzMatrixMeanVZHK = txt.einlesenVonDistanzmatrix("Attribut2_frechet", 194);;
 

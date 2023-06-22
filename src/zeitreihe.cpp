@@ -13,7 +13,7 @@ zeitreihe::zeitreihe(teilgraphenSet* teilgraphenIn){
 
     for(int i = 0; i < (*teilgraphenIn).getAnzahlTeilgraphen(); i++){
 
-        vector<int> vecTmp;
+        vector<double> vecTmp;
         vecTmp.push_back((*teilgraphenIn).getTeilgraphen()[i].getAnzahlZhk());
         vecTmp.push_back((*teilgraphenIn).getTeilgraphen()[i].getMaxVZhk());
         vecTmp.push_back((*teilgraphenIn).getTeilgraphen()[i].getGesVt());
@@ -49,7 +49,7 @@ float zeitreihe::berechneDiskreteFrechetDistanzND(vector<vector<int>> q){
     return ca[size(zeitreihenWerte)-1][size(q)-1];
 };
 
-float zeitreihe::berechneDiskreteFrechetDistanzFunktionswertND(vector<vector<int>> q, float** caIn, int i , int j){
+float zeitreihe::berechneDiskreteFrechetDistanzFunktionswertND(vector<vector<double>> q, float** caIn, int i , int j){
 
     if(caIn[i][j] > -1){
         return caIn[i][j];

@@ -358,7 +358,7 @@ void txtFileInterface::speichereDistanzmatrix(vector<vector<int>> distanzMatrix,
     myfile.close();
 };
 
-void txtFileInterface::speichereDistanzmatrix(vector<vector<float>> distanzMatrix, string distanzMatrixBezeichner){
+void txtFileInterface::speichereDistanzmatrix(vector<vector<double>> distanzMatrix, string distanzMatrixBezeichner){
 
     cout << "speichere Distanzmatrix" << endl;
 
@@ -395,7 +395,7 @@ void txtFileInterface::speichereDistanzmatrix(vector<vector<float>> distanzMatri
     myfile.close();
 };
 
-vector<vector<float>> txtFileInterface::einlesenVonDistanzmatrix(string matrixBezeichner, int dimension){
+vector<vector<double>> txtFileInterface::einlesenVonDistanzmatrix(string matrixBezeichner, int dimension){
 
     vector<string> dateien;
     for (const auto & file: directory_iterator(pfadOutput)) { 
@@ -404,9 +404,9 @@ vector<vector<float>> txtFileInterface::einlesenVonDistanzmatrix(string matrixBe
         dateien.push_back(file.path().generic_string());
     }
 
-    vector<vector<float>> distanzMatrix(dimension);
+    vector<vector<double>> distanzMatrix(dimension);
     for(int i = 0; i < dimension; i++){
-        distanzMatrix[i] = vector<float>(dimension);
+        distanzMatrix[i] = vector<double>(dimension);
     }
     for(int d = 0; d < size(dateien); d++){
 
@@ -415,7 +415,7 @@ vector<vector<float>> txtFileInterface::einlesenVonDistanzmatrix(string matrixBe
             cout << "datei gefunden: " + dateien[d] << endl;
 
             ifstream file(dateien[d]);
-            float number;
+            double number;
             int i = 0;
             int j = 0;
             while(file >> number) {
@@ -461,7 +461,7 @@ void txtFileInterface::speichereCluster(vector<vector<int>> cluster, int k, stri
     myfile2.close();
 }
 
-void txtFileInterface::speichereWerteKostenfunktion(vector<float> werteKostenfunktion, string bezeichner){
+void txtFileInterface::speichereWerteKostenfunktion(vector<double> werteKostenfunktion, string bezeichner){
 
     cout << "   speichere WerteKostenfunktion" << endl;
 

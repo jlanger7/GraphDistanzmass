@@ -7,7 +7,7 @@ using namespace std;
 class zeitreihe{
 
     private:
-    vector<vector<int>> zeitreihenWerte;
+    vector<vector<double>> zeitreihenWerte;
 
 
 
@@ -25,10 +25,10 @@ class zeitreihe{
     float berechneDtwDistanz1D(vector<vector<int>> q, int attribut);
     float berechneDtwDistanzFunktionswert1D(vector<vector<int>> q, int** caIn, int i , int j, int attribut);
     float d(vector<int> p, vector<int> q, int attribut);
-    void setZeitreihenWerte(vector<vector<int>> in){
+    void setZeitreihenWerte(vector<vector<double>> in){
         zeitreihenWerte = in;
     };
-    vector<vector<int>> getZeitreihenWerte(){
+    vector<vector<double>> getZeitreihenWerte(){
         return zeitreihenWerte;
     };
         
