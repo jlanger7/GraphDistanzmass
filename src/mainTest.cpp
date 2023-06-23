@@ -32,8 +32,11 @@ int main()
    std::stringstream datetime;
    datetime << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d_%H-%M");
     
-
-   cout << datetime.str() << endl;
+   double a = 5.68492757697;
+   float f = 5.68492757697;
+   cout << a << endl;
+   cout << f << endl; 
+   
    
    return 0;
 }

@@ -284,11 +284,12 @@ vector<zeitreihe>* txtFileInterface::einlesenVonZeitreihen(string ordnerPfad){
     }
 
     vector<zeitreihe>* zeitreihen = new vector<zeitreihe>;
-    for(int i = 0; i < z/3; i++){
+    int anzahlZeitreihenAttribute = zeitreihe::anzahlAttribute;
+    for(int i = 0; i < z/anzahlZeitreihenAttribute; i++){
 
         zeitreihe z;
-        vector<vector<int>> zeitreihenWerte;
-        for(int j = 0; j < 2; j++){
+        vector<vector<double>> zeitreihenWerte;
+        for(int j = 0; j < anzahlZeitreihenAttribute; j++){
             for(int k = 0; k < size(zeitreihenDateien); k++){
                 
                 if(zeitreihenDateien[k].find("graphNr"+to_string(i)+"_") != std::string::npos && zeitreihenDateien[k].find("attributNr"+to_string(j)+"_") != std::string::npos){
@@ -301,7 +302,7 @@ vector<zeitreihe>* txtFileInterface::einlesenVonZeitreihen(string ordnerPfad){
                         
                         if(j == 0){
                             
-                            vector<int> zeitreihenElement;
+                            vector<double> zeitreihenElement;
                             zeitreihenElement.push_back(number);
                             zeitreihenWerte.push_back(zeitreihenElement);
                         }else{

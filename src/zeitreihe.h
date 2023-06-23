@@ -14,17 +14,18 @@ class zeitreihe{
     public:
     zeitreihe();
     zeitreihe(teilgraphenSet* teilgraphenIn);
+    const static int anzahlAttribute = 5;
     void printZeitreihe();
-    float berechneDiskreteFrechetDistanzND(vector<vector<int>> q);
-    float berechneDiskreteFrechetDistanzFunktionswertND(vector<vector<int>> q, float** caIn, int i , int j);
-    float berechneDtwDistanzND(vector<vector<int>> q);
-    float berechneDtwDistanzFunktionswertND(vector<vector<int>> q, float** caIn, int i , int j);
-    float canberraDistance(vector<int> p, vector<int> q);
-    float berechneDiskreteFrechetDistanz1D(vector<vector<int>> q, int attribut);
-    float berechneDiskreteFrechetDistanzFunktionswert1D(vector<vector<int>> q, int** caIn, int i , int j, int attribut);
-    float berechneDtwDistanz1D(vector<vector<int>> q, int attribut);
-    float berechneDtwDistanzFunktionswert1D(vector<vector<int>> q, int** caIn, int i , int j, int attribut);
-    float d(vector<int> p, vector<int> q, int attribut);
+    double berechneDiskreteFrechetDistanzND(vector<vector<double>> q);
+    double berechneDiskreteFrechetDistanzFunktionswertND(vector<vector<double>> q, double** caIn, int i , int j);
+    double berechneDtwDistanzND(vector<vector<double>> q);
+    double berechneDtwDistanzFunktionswertND(vector<vector<double>> q, double** caIn, int i , int j);
+    double canberraDistance(vector<double> p, vector<double> q);
+    double berechneDiskreteFrechetDistanz1D(vector<vector<double>> q, int attribut);
+    double berechneDiskreteFrechetDistanzFunktionswert1D(vector<vector<double>> q, int** caIn, int i , int j, int attribut);
+    double berechneDtwDistanz1D(vector<vector<double>> q, int attribut);
+    double berechneDtwDistanzFunktionswert1D(vector<vector<double>> q, int** caIn, int i , int j, int attribut);
+    double d(vector<double> p, vector<double> q, int attribut);
     void setZeitreihenWerte(vector<vector<double>> in){
         zeitreihenWerte = in;
     };

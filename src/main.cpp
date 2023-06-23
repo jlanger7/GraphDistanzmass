@@ -61,6 +61,8 @@ void graphenZuZeitreihenTransformieren(){
          txt.speichereZeitreihe(z1, 0, zeitreihenOrdnerPfad+"\\" + "graphNr" + to_string(graphNr+anzahlBereitsvorhandeneGraphen) + "_attributNr0_" + graphDateien1[i]);
          txt.speichereZeitreihe(z1, 1, zeitreihenOrdnerPfad+"\\" + "graphNr" + to_string(graphNr+anzahlBereitsvorhandeneGraphen) + "_attributNr1_" + graphDateien1[i]);
          txt.speichereZeitreihe(z1, 2, zeitreihenOrdnerPfad+"\\" + "graphNr" + to_string(graphNr+anzahlBereitsvorhandeneGraphen) + "_attributNr2_" + graphDateien1[i]);
+         txt.speichereZeitreihe(z1, 3, zeitreihenOrdnerPfad+"\\" + "graphNr" + to_string(graphNr+anzahlBereitsvorhandeneGraphen) + "_attributNr3_" + graphDateien1[i]);
+         txt.speichereZeitreihe(z1, 4, zeitreihenOrdnerPfad+"\\" + "graphNr" + to_string(graphNr+anzahlBereitsvorhandeneGraphen) + "_attributNr4_" + graphDateien1[i]);
          graphNr += 1;
       }else{
 
@@ -75,7 +77,7 @@ void graphenZuZeitreihenTransformieren(){
    }
 }
 
-void clusteringBerechnen(int startk, int endK, string distanzmass, vector<vector<double>> distanzMatrixGes, vector<vector<double>> distanzMatrixNrZHK,vector<vector<double>> distanzMatrixMaxZHK ,vector<vector<double>> distanzMatrixGesVt){
+void clusteringBerechnen(int startk, int endK, string distanzmass, vector<vector<double>> distanzMatrixGes, vector<vector<double>> distanzMatrixNrZHK,vector<vector<double>> distanzMatrixMaxZHK ,vector<vector<double>> distanzMatrixGesVt, vector<vector<double>> distanzMatrixMeanVt, vector<vector<double>> distanzMatrixMeanNrNachbar){
 
    txtFileInterface txt;
    
@@ -83,6 +85,8 @@ void clusteringBerechnen(int startk, int endK, string distanzmass, vector<vector
    vector<double> wertKostenfunktion0;
    vector<double> wertKostenfunktion1;
    vector<double> wertKostenfunktion2;
+   vector<double> wertKostenfunktion3;
+   vector<double> wertKostenfunktion4;
    for(int k = startk; k < endK+1; k++){
 
       pamClustering c(&distanzMatrixGes, k);
@@ -108,12 +112,26 @@ void clusteringBerechnen(int startk, int endK, string distanzmass, vector<vector
       cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c3.getWertKostenfunktion()) << endl;
       wertKostenfunktion2.push_back(c3.getWertKostenfunktion());
       txt.speichereCluster(cluster3, k, "Attribut2_"+distanzmass, c3.getWertKostenfunktion());
+
+      pamClustering c4(&distanzMatrixMeanVt, k);
+      vector<vector<int>> cluster4 = c4.berechneClustering();
+      cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c4.getWertKostenfunktion()) << endl;
+      wertKostenfunktion3.push_back(c4.getWertKostenfunktion());
+      txt.speichereCluster(cluster4, k, "Attribut3_"+distanzmass, c4.getWertKostenfunktion());
+
+      pamClustering c5(&distanzMatrixMeanNrNachbar, k);
+      vector<vector<int>> cluster5 = c5.berechneClustering();
+      cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c5.getWertKostenfunktion()) << endl;
+      wertKostenfunktion4.push_back(c5.getWertKostenfunktion());
+      txt.speichereCluster(cluster5, k, "Attribut4_"+distanzmass, c5.getWertKostenfunktion());
    }
 
    txt.speichereWerteKostenfunktion(wertKostenfunktionGes, "Gesamt_"+distanzmass);
    txt.speichereWerteKostenfunktion(wertKostenfunktion0, "Attribut0_"+distanzmass);
    txt.speichereWerteKostenfunktion(wertKostenfunktion1, "Attribut1_"+distanzmass);
    txt.speichereWerteKostenfunktion(wertKostenfunktion2, "Attribut2_"+distanzmass);
+   txt.speichereWerteKostenfunktion(wertKostenfunktion3, "Attribut3_"+distanzmass);
+   txt.speichereWerteKostenfunktion(wertKostenfunktion4, "Attribut4_"+distanzmass);
 }
 
 void zeitreihenDistanzmatritzenBerechnen(bool dtw){
@@ -121,15 +139,21 @@ void zeitreihenDistanzmatritzenBerechnen(bool dtw){
    txtFileInterface txt;
    vector<zeitreihe>* zz = txt.einlesenVonZeitreihen(zeitreihenOrdnerPfad);
 
+   cout << "Groesse zz: " + to_string(size(*zz)) << endl;
+
    vector<vector<double>> distanzMatrixGes(size(*zz));
    vector<vector<double>> distanzMatrixNrZHK(size(*zz));
    vector<vector<double>> distanzMatrixMaxZHK(size(*zz));
    vector<vector<double>> distanzMatrixGesVt(size(*zz));
+   vector<vector<double>> distanzMatrixMeanVt(size(*zz));
+   vector<vector<double>> distanzMatrixMeanNrNachbarn(size(*zz));
    for(int i = 0; i < size(*zz); i++){
       distanzMatrixGes[i] = vector<double>(size(*zz));
       distanzMatrixNrZHK[i] = vector<double>(size(*zz));
       distanzMatrixMaxZHK[i] = vector<double>(size(*zz));
       distanzMatrixGesVt[i] = vector<double>(size(*zz));
+      distanzMatrixMeanVt[i] = vector<double>(size(*zz));
+      distanzMatrixMeanNrNachbarn[i] = vector<double>(size(*zz));
    }
 
    string verwendetesDistanzmass;
@@ -142,18 +166,22 @@ void zeitreihenDistanzmatritzenBerechnen(bool dtw){
 
          cout << "   mit Zeitreihe " + to_string(j) << endl;
 
-         //Füge Distanzen den Distanzmatrizen hinzu
+         //Füge Distanzen den Distanzmatrizen hinzu 
          if(!dtw){
             distanzMatrixGes[i][j] = (*zz)[i].berechneDiskreteFrechetDistanzND((*zz)[j].getZeitreihenWerte());
             distanzMatrixNrZHK[i][j] = (*zz)[i].berechneDiskreteFrechetDistanz1D((*zz)[j].getZeitreihenWerte(),0);
             distanzMatrixMaxZHK[i][j] = (*zz)[i].berechneDiskreteFrechetDistanz1D((*zz)[j].getZeitreihenWerte(),1);
             distanzMatrixGesVt[i][j] = (*zz)[i].berechneDiskreteFrechetDistanz1D((*zz)[j].getZeitreihenWerte(),2);
+            distanzMatrixMeanVt[i][j] = (*zz)[i].berechneDiskreteFrechetDistanz1D((*zz)[j].getZeitreihenWerte(),3);
+            distanzMatrixMeanNrNachbarn[i][j] = (*zz)[i].berechneDiskreteFrechetDistanz1D((*zz)[j].getZeitreihenWerte(),4);
             verwendetesDistanzmass = "frechet";
          }else if(dtw){
             distanzMatrixGes[i][j] = (*zz)[i].berechneDtwDistanzND((*zz)[j].getZeitreihenWerte());
             distanzMatrixNrZHK[i][j] = (*zz)[i].berechneDtwDistanz1D((*zz)[j].getZeitreihenWerte(),0);
             distanzMatrixMaxZHK[i][j] = (*zz)[i].berechneDtwDistanz1D((*zz)[j].getZeitreihenWerte(),1);
             distanzMatrixGesVt[i][j] = (*zz)[i].berechneDtwDistanz1D((*zz)[j].getZeitreihenWerte(),2);
+            distanzMatrixMeanVt[i][j] = (*zz)[i].berechneDtwDistanz1D((*zz)[j].getZeitreihenWerte(),3);
+            distanzMatrixMeanNrNachbarn[i][j] = (*zz)[i].berechneDtwDistanz1D((*zz)[j].getZeitreihenWerte(),4);
             verwendetesDistanzmass = "dtw";
          }
          //Matrizen sollten symmetrisch sein, also hier evtl auch Werte für [j][i] einfügen und oben zu Beginn pruefen, ob Wert schon
@@ -164,8 +192,10 @@ void zeitreihenDistanzmatritzenBerechnen(bool dtw){
    txt.speichereDistanzmatrix(distanzMatrixNrZHK, "Attribut0_"+verwendetesDistanzmass);
    txt.speichereDistanzmatrix(distanzMatrixMaxZHK, "Attribut1_"+verwendetesDistanzmass);
    txt.speichereDistanzmatrix(distanzMatrixGesVt, "Attribut2_"+verwendetesDistanzmass);
+   txt.speichereDistanzmatrix(distanzMatrixMeanVt, "Attribut3_"+verwendetesDistanzmass);
+   txt.speichereDistanzmatrix(distanzMatrixMeanNrNachbarn, "Attribut4_"+verwendetesDistanzmass);
 
-   clusteringBerechnen(2, 50, verwendetesDistanzmass, distanzMatrixGes, distanzMatrixNrZHK, distanzMatrixMaxZHK, distanzMatrixGesVt);
+   clusteringBerechnen(2, 50, verwendetesDistanzmass, distanzMatrixGes, distanzMatrixNrZHK, distanzMatrixMaxZHK, distanzMatrixGesVt, distanzMatrixMeanVt, distanzMatrixMeanNrNachbarn);
 }
 
 void clusterTest(){
@@ -198,7 +228,7 @@ void clusterTest(){
 
 int main(){
 
-   graphenZuZeitreihenTransformieren();
+   //graphenZuZeitreihenTransformieren();
 
    zeitreihenDistanzmatritzenBerechnen(true);
    zeitreihenDistanzmatritzenBerechnen(false);
