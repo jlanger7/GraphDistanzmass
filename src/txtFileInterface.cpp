@@ -274,18 +274,19 @@ void txtFileInterface::speichereZeitreihe(zeitreihe z, int zeitreihenAttribut, s
 
 vector<zeitreihe>* txtFileInterface::einlesenVonZeitreihen(string ordnerPfad){
 
-    int z = 0;
+    int c = 0;
     vector<string> zeitreihenDateien;
     for (const auto & file: directory_iterator(ordnerPfad)) { 
 
         //string dateiPfad(file.path().generic_string());
         zeitreihenDateien.push_back(file.path().generic_string());
-        z += 1;
+        c += 1;
     }
 
     vector<zeitreihe>* zeitreihen = new vector<zeitreihe>;
     int anzahlZeitreihenAttribute = zeitreihe::anzahlAttribute;
-    for(int i = 0; i < z/anzahlZeitreihenAttribute; i++){
+    cout << "Anzahl Graphen: " + to_string(c/anzahlZeitreihenAttribute) << endl;
+    for(int i = 0; i < c/anzahlZeitreihenAttribute; i++){
 
         zeitreihe z;
         vector<vector<double>> zeitreihenWerte;
@@ -296,7 +297,7 @@ vector<zeitreihe>* txtFileInterface::einlesenVonZeitreihen(string ordnerPfad){
 
                     ifstream file(zeitreihenDateien[k]);
                     cout << "lese ein " + zeitreihenDateien[k] << endl;
-                    int number;
+                    double number;
                     int nrElement = 0;
                     while(file >> number) {
                         

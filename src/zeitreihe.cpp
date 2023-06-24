@@ -60,10 +60,10 @@ double zeitreihe::berechneDiskreteFrechetDistanzFunktionswertND(vector<vector<do
         return canberraDistance(zeitreihenWerte[i],q[j]);
     }else if(i > 0 && j == 0){
         //cout << "Berechne canberra fuer ih: " + to_string(i) + " und jot: " + to_string(j)  << endl;
-        return max(berechneDiskreteFrechetDistanzFunktionswertND(q, caIn, i-1, j),canberraDistance(zeitreihenWerte[i],q[j]));
+        return max(caIn[i-1][j],canberraDistance(zeitreihenWerte[i],q[j]));
     }else if(i == 0 && j > 0){
         //cout << "Berechne canberra fuer ih: " + to_string(i) + " und jot: " + to_string(j)  << endl;
-        return max(berechneDiskreteFrechetDistanzFunktionswertND(q, caIn, i, j-1),canberraDistance(zeitreihenWerte[i],q[j]));
+        return max(caIn[i][j-1],canberraDistance(zeitreihenWerte[i],q[j]));
     }else if(i > 0 && j > 0){
         //cout << "fuer ih: " + to_string(i) + " und jot: " + to_string(j) + " nimm:" << endl;
         if(berechneDtwDistanzFunktionswertND(q, caIn, i, j-1) <= min(berechneDtwDistanzFunktionswertND(q, caIn, i-1, j),berechneDtwDistanzFunktionswertND(q, caIn, i-1, j-1))){
@@ -74,8 +74,7 @@ double zeitreihe::berechneDiskreteFrechetDistanzFunktionswertND(vector<vector<do
             //cout << "   ih: " + to_string(i-1) + " und jot: " + to_string(j-1) << endl;
         }
         //cout << "Berechne canberra fuer ih: " + to_string(i) + " und jot: " + to_string(j)  << endl;
-        return max(min(min(berechneDiskreteFrechetDistanzFunktionswertND(q, caIn, i-1, j),berechneDiskreteFrechetDistanzFunktionswertND(q, caIn, i-1, j-1)),
-            berechneDiskreteFrechetDistanzFunktionswertND(q, caIn, i, j-1)),canberraDistance(zeitreihenWerte[i],q[j]));
+        return max(min(min(caIn[i-1][j],caIn[i-1][j-1]),caIn[i][j-1]),canberraDistance(zeitreihenWerte[i],q[j]));
     }else{
         return 1000000;
     }
@@ -83,17 +82,13 @@ double zeitreihe::berechneDiskreteFrechetDistanzFunktionswertND(vector<vector<do
 
 double zeitreihe::berechneDtwDistanzND(vector<vector<double>> q){
 
-    cout << "Groesse zeitreihenwerte: " + to_string(size(zeitreihenWerte)) + " groesse q: " + to_string(size(q)) << endl;
     double** ca = new double*[size(zeitreihenWerte)];
     for(int i = 0; i < size(zeitreihenWerte); i++){
-        cout << "iterarionI: " + to_string(i) << endl;
         ca[i] = new double[size(q)];
         for(int j = 0; j < size(q); j++){
-            cout << "was here jot: " + to_string(j) << endl;
             ca[i][j] = -1.0;
-            cout << "was here: " + to_string(__LINE__) << endl;
             ca[i][j] = berechneDtwDistanzFunktionswertND(q, ca, i, j);
-            cout << "ih: " + to_string(i) + " jot: " + to_string(j) + " ca[i][j]: " + to_string(ca[i][j]) << endl;
+            //cout << "ih: " + to_string(i) + " jot: " + to_string(j) + " ca[i][j]: " + to_string(ca[i][j]) << endl;
             //cout << " " << endl;
         }
     }
@@ -102,20 +97,17 @@ double zeitreihe::berechneDtwDistanzND(vector<vector<double>> q){
 
 double zeitreihe::berechneDtwDistanzFunktionswertND(vector<vector<double>> q, double** caIn, int i , int j){
 
-    cout << "Fktwert ih: " + to_string(i) + " jot: " + to_string(j)  << endl;
     if(caIn[i][j] > -1){
-        cout << "Fktwert ih: " + to_string(i) + " jot: " + to_string(j) + " ca[i][j]: " + to_string(caIn[i][j]) << endl;
         return caIn[i][j];
     }else if(i == 0 && j == 0){
         //cout << "Berechne canberra fuer ih: " + to_string(i) + " und jot: " + to_string(j)  << endl;
         return canberraDistance(zeitreihenWerte[i],q[j]);
     }else if(i > 0 && j == 0){
-        cout << "if" << endl;
         //cout << "Berechne canberra fuer ih: " + to_string(i) + " und jot: " + to_string(j)  << endl;
-        return berechneDtwDistanzFunktionswertND(q, caIn, i-1, j) + canberraDistance(zeitreihenWerte[i],q[j]);
+        return caIn[i-1][j] + canberraDistance(zeitreihenWerte[i],q[j]);
     }else if(i == 0 && j > 0){
         //cout << "Berechne canberra fuer ih: " + to_string(i) + " und jot: " + to_string(j)  << endl;
-        return berechneDtwDistanzFunktionswertND(q, caIn, i, j-1) + canberraDistance(zeitreihenWerte[i],q[j]);
+        return caIn[i][j-1] + canberraDistance(zeitreihenWerte[i],q[j]);
     }else if(i > 0 && j > 0){
         //cout << "fuer ih: " + to_string(i) + " und jot: " + to_string(j) + " nimm:" << endl;
         if(berechneDtwDistanzFunktionswertND(q, caIn, i, j-1) <= min(berechneDtwDistanzFunktionswertND(q, caIn, i-1, j),berechneDtwDistanzFunktionswertND(q, caIn, i-1, j-1))){
@@ -126,8 +118,7 @@ double zeitreihe::berechneDtwDistanzFunktionswertND(vector<vector<double>> q, do
             //cout << "   ih: " + to_string(i-1) + " und jot: " + to_string(j-1) << endl;
         }
         //cout << "Berechne canberra fuer ih: " + to_string(i) + " und jot: " + to_string(j)  << endl;
-        return min(min(berechneDtwDistanzFunktionswertND(q, caIn, i-1, j),berechneDtwDistanzFunktionswertND(q, caIn, i-1, j-1)),
-            berechneDtwDistanzFunktionswertND(q, caIn, i, j-1)) + canberraDistance(zeitreihenWerte[i],q[j]);
+        return min(min(caIn[i-1][j],caIn[i-1][j-1]),caIn[i][j-1]) + canberraDistance(zeitreihenWerte[i],q[j]);
     }else{
         return 1000000;
     }
@@ -140,9 +131,11 @@ double zeitreihe::canberraDistance(vector<double> p, vector<double> q){
     }
     double dist = 0;
     for(int i = 0; i < size(p); i++){
-        cout << "canberraI: " + to_string(i) << endl;
-        dist += (double)abs(p[i]-q[i])/(double)(p[i]+q[i]);
-        cout << "canberra: " + to_string(dist) << endl;
+        if(p[i]+q[i] == 0){
+            dist += 0;
+        }else{
+            dist += (double)abs(p[i]-q[i])/(double)(p[i]+q[i]);
+        }
     }
     //cout << "canberra: " + to_string(dist) << endl;
     return dist;
