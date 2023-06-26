@@ -75,9 +75,9 @@ void pamClustering::init(){
     }
 };
 
-int pamClustering::getDistanzZumNaechstenGewaehltenMedoid(int objekt){
+double pamClustering::getDistanzZumNaechstenGewaehltenMedoid(int objekt){
 
-    int tmpMin;
+    double tmpMin;
     for(int i = 0; i < size(medoids); i++){
 
         if(i == 0 || (*distanzMatrix)[objekt][medoids[i]] < tmpMin){
@@ -97,16 +97,16 @@ vector<vector<int>> pamClustering::berechneClustering(){
 
     bool konvergiert = false;
     int iterationen = 0;
-    while(!konvergiert && iterationen < 50){
+    while(!konvergiert && iterationen < 99){
 
         //cout << "   Iteration Clustering Nr. " + to_string(iterationen) << endl;
-        int minKosten;
+        double minKosten;
         int minI;
         int minH;
         for(int i = 0; i < size(medoids); i++){
             for(int h = 0; h < size(nichtSelektierteObjekte); h++){
 
-                int sumTauschIH = 0;
+                double sumTauschIH = 0;
                 for(int j = 0; j < size(nichtSelektierteObjekte); j++){
 
                     // if(nichtSelektierteObjekte[h] == 0 && nichtSelektierteObjekte[j] == 1 || nichtSelektierteObjekte[h] == 192 && nichtSelektierteObjekte[j] == 193){
@@ -116,8 +116,8 @@ vector<vector<int>> pamClustering::berechneClustering(){
                     
                     if(j!=h){
 
-                        int c;
-                        int distanzNaechsterMedoid = getDistanzZumNaechstenGewaehltenMedoid(nichtSelektierteObjekte[j]);
+                        double c;
+                        double distanzNaechsterMedoid = getDistanzZumNaechstenGewaehltenMedoid(nichtSelektierteObjekte[j]);
                         //cout << "       returnWert naechster: " + to_string(minDistanzZuEinemAnderenMedoid) << endl;
                         //cout << "       was here: " + to_string(__LINE__) << endl;
                         if((*distanzMatrix)[nichtSelektierteObjekte[j]][nichtSelektierteObjekte[h]] > distanzNaechsterMedoid && 
@@ -130,7 +130,7 @@ vector<vector<int>> pamClustering::berechneClustering(){
                         if((*distanzMatrix)[nichtSelektierteObjekte[j]][medoids[i]] <= distanzNaechsterMedoid){
 
                             //cout << "       was here: " + to_string(__LINE__) << endl;
-                            int distanzZweitNaechsterMedoid = getDistanzZumZweitNaechstenGewaehltenMedoid(nichtSelektierteObjekte[j]);
+                            double distanzZweitNaechsterMedoid = getDistanzZumZweitNaechstenGewaehltenMedoid(nichtSelektierteObjekte[j]);
                             // if (iterationen > 98){
                                 
                             //     cout << "       distanz zweitnaechstes medoid: " + to_string(distanzZweitNaechsterMedoid) << endl;
@@ -177,42 +177,42 @@ vector<vector<int>> pamClustering::berechneClustering(){
                 }
             }
         }
-        if(minKosten < -10){
+        if(minKosten < 0){
             
             //cout << "       was here: " + to_string(__LINE__) << endl;
             int neuerMedoid = nichtSelektierteObjekte[minH];
             int neuesNichtselektierteObjekt = medoids[minI];
-            if (iterationen > 98){
-                cout << "       neuer Medoid Objekt: " + to_string(nichtSelektierteObjekte[minH]) + " entfernter Medoid " + to_string(medoids[minI]) << endl;
-            }
+            // if (iterationen > 98){
+            //     cout << "       neuer Medoid Objekt: " + to_string(nichtSelektierteObjekte[minH]) + " entfernter Medoid " + to_string(medoids[minI]) << endl;
+            // }
             nichtSelektierteObjekte.erase(nichtSelektierteObjekte.begin()+minH);
             nichtSelektierteObjekte.push_back(neuesNichtselektierteObjekt);
             medoids.erase(medoids.begin()+minI);
             medoids.push_back(neuerMedoid);
-            if (iterationen > 98){
-                cout << "       nichtselektierteObjekte nun: " << " ";
-                for(int p = 0; p < size(nichtSelektierteObjekte); p++){
-                    cout << nichtSelektierteObjekte[p] << " ";
-                }
-                cout << endl;
-            }
-            if (iterationen > 98){
-                cout << "       medoids nun: " << " ";
-                for(int p = 0; p < size(medoids); p++){
-                    cout << medoids[p] << " ";
-                }
-                cout << endl;
-            }
+            // if (iterationen > 98){
+            //     cout << "       nichtselektierteObjekte nun: " << " ";
+            //     for(int p = 0; p < size(nichtSelektierteObjekte); p++){
+            //         cout << nichtSelektierteObjekte[p] << " ";
+            //     }
+            //     cout << endl;
+            // }
+            // if (iterationen > 98){
+            //     cout << "       medoids nun: " << " ";
+            //     for(int p = 0; p < size(medoids); p++){
+            //         cout << medoids[p] << " ";
+            //     }
+            //     cout << endl;
+            // }
             //cout << "       was here: " + to_string(__LINE__) << endl;
         }else{
             konvergiert = true;
-            cout << "   Ende nach Iteration Nr. " + to_string(iterationen) << endl;
+            if(true){ cout << "Ende nach Iteration Nr. " + to_string(iterationen) << endl;}
         }
 
-        if(iterationen < 99 && iterationen > 90 || iterationen < 9999 && iterationen > 9990){
-            berechneZuordnungZuCluster();
-            cout << "   Wert Kostenfkt nun " + to_string(wertKostenFunktion) << endl;
-        }
+        // if(iterationen < 99 && iterationen > 90 || iterationen < 9999 && iterationen > 9990){
+        //     berechneZuordnungZuCluster();
+        //     cout << "   Wert Kostenfkt nun " + to_string(wertKostenFunktion) << endl;
+        // }
         
         iterationen += 1;
     }
@@ -234,12 +234,14 @@ void pamClustering::berechneZuordnungZuCluster(){
     for(int i = 0; i < size(*distanzMatrix); i++){
         
         int minMedoidIndex;
-        int minMedoidDist;
+        double minMedoidDist;
         for(int m = 0; m < size(medoids); m++){
 
-            if(m == 0 || (*distanzMatrix)[i][medoids[m]] < minMedoidDist){
+            double aktDistanz = ((double)(*distanzMatrix)[i][medoids[m]])*((double)(*distanzMatrix)[i][medoids[m]]);
+            if(m == 0 || aktDistanz < minMedoidDist){
 
-                minMedoidDist = (*distanzMatrix)[i][medoids[m]];
+                minMedoidDist = aktDistanz;
+                //minMedoidDist = (*distanzMatrix)[i][medoids[m]];
                 minMedoidIndex = m;
             }
         }
@@ -251,9 +253,9 @@ void pamClustering::berechneZuordnungZuCluster(){
     }
 };
 
-int pamClustering::getDistanzZumWeitestenGewaehltenMedoidAusserI(int objekt, int medoidI){
+double pamClustering::getDistanzZumWeitestenGewaehltenMedoidAusserI(int objekt, int medoidI){
 
-    int tmpMax = 0;
+    double tmpMax = 0;
     for(int i = 0; i < size(medoids); i++){
 
         if((*distanzMatrix)[objekt][medoids[i]] > tmpMax && medoids[i]!= medoidI){
@@ -265,10 +267,10 @@ int pamClustering::getDistanzZumWeitestenGewaehltenMedoidAusserI(int objekt, int
     return tmpMax;
 };
 
-int pamClustering::getDistanzZumZweitNaechstenGewaehltenMedoid(int objekt){
+double pamClustering::getDistanzZumZweitNaechstenGewaehltenMedoid(int objekt){
 
-    int tmpMin;
-    int tmpMin2;
+    double tmpMin;
+    double tmpMin2;
     if((*distanzMatrix)[objekt][medoids[0]] <= (*distanzMatrix)[objekt][medoids[1]]){
         tmpMin = (*distanzMatrix)[objekt][medoids[0]];
         tmpMin2 = (*distanzMatrix)[objekt][medoids[1]];

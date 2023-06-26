@@ -22,9 +22,9 @@ class zeitreihe{
     double berechneDtwDistanzFunktionswertND(vector<vector<double>> q, double** caIn, int i , int j);
     double canberraDistance(vector<double> p, vector<double> q);
     double berechneDiskreteFrechetDistanz1D(vector<vector<double>> q, int attribut);
-    double berechneDiskreteFrechetDistanzFunktionswert1D(vector<vector<double>> q, int** caIn, int i , int j, int attribut);
+    double berechneDiskreteFrechetDistanzFunktionswert1D(vector<vector<double>> q, double** caIn, int i , int j, int attribut);
     double berechneDtwDistanz1D(vector<vector<double>> q, int attribut);
-    double berechneDtwDistanzFunktionswert1D(vector<vector<double>> q, int** caIn, int i , int j, int attribut);
+    double berechneDtwDistanzFunktionswert1D(vector<vector<double>> q, double** caIn, int i , int j, int attribut);
     double d(vector<double> p, vector<double> q, int attribut);
     void setZeitreihenWerte(vector<vector<double>> in){
         zeitreihenWerte = in;

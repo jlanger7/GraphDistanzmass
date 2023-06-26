@@ -12,18 +12,18 @@ class pamClustering{
     vector<int> medoids;
     vector<int> nichtSelektierteObjekte;
     vector<vector<int>> zuordnungZuCluster;
-    int wertKostenFunktion;
+    double wertKostenFunktion;
 
 
     public:
     pamClustering(vector<vector<double>>* distanzMatrixIn, int kIn);
     void init();
-    int getDistanzZumNaechstenGewaehltenMedoid(int objekt);
-    int getDistanzZumWeitestenGewaehltenMedoidAusserI(int objekt, int medoidI);
-    int getDistanzZumZweitNaechstenGewaehltenMedoid(int objekt);
+    double getDistanzZumNaechstenGewaehltenMedoid(int objekt);
+    double getDistanzZumWeitestenGewaehltenMedoidAusserI(int objekt, int medoidI);
+    double getDistanzZumZweitNaechstenGewaehltenMedoid(int objekt);
     vector<vector<int>> berechneClustering();
     void berechneZuordnungZuCluster();
-    int getWertKostenfunktion(){
+    double getWertKostenfunktion(){
         return wertKostenFunktion;
     };
     vector<int>& getMedoids(){

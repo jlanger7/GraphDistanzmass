@@ -131,10 +131,12 @@ double zeitreihe::canberraDistance(vector<double> p, vector<double> q){
     }
     double dist = 0;
     for(int i = 0; i < size(p); i++){
-        if(p[i]+q[i] == 0){
-            dist += 0;
-        }else{
-            dist += (double)abs(p[i]-q[i])/(double)(p[i]+q[i]);
+        if(i != 3 && i != 4){
+            if(p[i]+q[i] == 0){
+                dist += 0;
+            }else{
+                dist += (double)abs(p[i]-q[i])/(double)(p[i]+q[i]);
+            }
         }
     }
     //cout << "canberra: " + to_string(dist) << endl;
@@ -143,9 +145,9 @@ double zeitreihe::canberraDistance(vector<double> p, vector<double> q){
 
 double zeitreihe::berechneDiskreteFrechetDistanz1D(vector<vector<double>> q, int attribut){
 
-    int** ca = new int*[size(zeitreihenWerte)];
+    double** ca = new double*[size(zeitreihenWerte)];
     for(int i = 0; i < size(zeitreihenWerte); i++){
-        ca[i] = new int[size(q)];
+        ca[i] = new double[size(q)];
         for(int j = 0; j < size(q); j++){
             ca[i][j] = -1;
 
@@ -156,7 +158,7 @@ double zeitreihe::berechneDiskreteFrechetDistanz1D(vector<vector<double>> q, int
     return ca[size(zeitreihenWerte)-1][size(q)-1];
 };
 
-double zeitreihe::berechneDiskreteFrechetDistanzFunktionswert1D(vector<vector<double>> q, int** caIn, int i , int j, int attribut){
+double zeitreihe::berechneDiskreteFrechetDistanzFunktionswert1D(vector<vector<double>> q, double** caIn, int i , int j, int attribut){
 
     if(caIn[i][j] > -1){
         return caIn[i][j];
@@ -176,9 +178,9 @@ double zeitreihe::berechneDiskreteFrechetDistanzFunktionswert1D(vector<vector<do
 
 double zeitreihe::berechneDtwDistanz1D(vector<vector<double>> q, int attribut){
 
-    int** ca = new int*[size(zeitreihenWerte)];
+    double** ca = new double*[size(zeitreihenWerte)];
     for(int i = 0; i < size(zeitreihenWerte); i++){
-        ca[i] = new int[size(q)];
+        ca[i] = new double[size(q)];
         for(int j = 0; j < size(q); j++){
             ca[i][j] = -1;
 
@@ -197,7 +199,7 @@ double zeitreihe::berechneDtwDistanz1D(vector<vector<double>> q, int attribut){
     return output;
 };
 
-double zeitreihe::berechneDtwDistanzFunktionswert1D(vector<vector<double>> q, int** caIn, int i , int j, int attribut){
+double zeitreihe::berechneDtwDistanzFunktionswert1D(vector<vector<double>> q, double** caIn, int i , int j, int attribut){
 
     if(caIn[i][j] > -1){
         return caIn[i][j];

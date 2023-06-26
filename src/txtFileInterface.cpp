@@ -385,7 +385,7 @@ void txtFileInterface::speichereDistanzmatrix(vector<vector<double>> distanzMatr
                 d += 1;
             }
             int spaceNr = 15 - d;
-            cout << "speichere Wert: " + to_string(distanzMatrix[i][j]) << endl;
+            //cout << "speichere Wert: " + to_string(distanzMatrix[i][j]) << endl;
             myfile << distanzMatrix[i][j] ;
             for(int d = 0; d < spaceNr; d++){
                 myfile << " ";
@@ -425,7 +425,7 @@ vector<vector<double>> txtFileInterface::einlesenVonDistanzmatrix(string matrixB
                 
 
                 distanzMatrix[i][j] = number;
-                cout << "nr " + to_string(number) << endl;
+                //cout << "nr " + to_string(number) << endl;
                 if(number == 0){
                 cout << "Distanz 0 in Spalte: " + to_string(j) << endl;    
                 }
