@@ -89,17 +89,17 @@ void clusteringBerechnen(int startk, int endK, string distanzmass, vector<vector
    //vector<double> wertKostenfunktion4;
    for(int k = startk; k < endK+1; k++){
 
-      pamClustering c(&distanzMatrixGes, k);
-      vector<vector<int>> cluster = c.berechneClustering();
-      cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c.getWertKostenfunktion()) << endl;
-      wertKostenfunktionGes.push_back(c.getWertKostenfunktion());
-      txt.speichereCluster(cluster, k, "AttributeGesamt_"+distanzmass, c.getWertKostenfunktion());
+      // pamClustering c(&distanzMatrixGes, k);
+      // vector<vector<int>> cluster = c.berechneClustering();
+      // cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c.getWertKostenfunktion()) << endl;
+      // wertKostenfunktionGes.push_back(c.getWertKostenfunktion());
+      // txt.speichereCluster(cluster, k, "AttributeGesamt_"+distanzmass, c.getWertKostenfunktion());
 
-      // pamClustering c1(&distanzMatrixNrZHK, k);
-      // vector<vector<int>> cluster1 = c1.berechneClustering();
-      // cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c1.getWertKostenfunktion()) << endl;
-      // wertKostenfunktion0.push_back(c1.getWertKostenfunktion());
-      // txt.speichereCluster(cluster1, k, "Attribut0_"+distanzmass, c1.getWertKostenfunktion());
+      pamClustering c1(&distanzMatrixNrZHK, k);
+      vector<vector<int>> cluster1 = c1.berechneClustering();
+      cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c1.getWertKostenfunktion()) << endl;
+      wertKostenfunktion0.push_back(c1.getWertKostenfunktion());
+      txt.speichereCluster(cluster1, k, "Attribut0_"+distanzmass, c1.getWertKostenfunktion());
 
       // pamClustering c2(&distanzMatrixMaxZHK, k);
       // vector<vector<int>> cluster2 = c2.berechneClustering();
@@ -126,8 +126,8 @@ void clusteringBerechnen(int startk, int endK, string distanzmass, vector<vector
       // txt.speichereCluster(cluster5, k, "Attribut4_"+distanzmass, c5.getWertKostenfunktion());
    }
 
-   txt.speichereWerteKostenfunktion(wertKostenfunktionGes, "Gesamt_"+distanzmass);
-   // txt.speichereWerteKostenfunktion(wertKostenfunktion0, "Attribut0_"+distanzmass);
+   //txt.speichereWerteKostenfunktion(wertKostenfunktionGes, "Gesamt_"+distanzmass);
+   txt.speichereWerteKostenfunktion(wertKostenfunktion0, "Attribut0_"+distanzmass);
    // txt.speichereWerteKostenfunktion(wertKostenfunktion1, "Attribut1_"+distanzmass);
    // txt.speichereWerteKostenfunktion(wertKostenfunktion2, "Attribut2_"+distanzmass);
    //txt.speichereWerteKostenfunktion(wertKostenfunktion3, "Attribut3_"+distanzmass);
