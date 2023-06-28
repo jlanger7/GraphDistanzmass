@@ -60,8 +60,8 @@ def readInTxtFile(path):
         if i >= maxI:
             print("LST")
             lastTimestamp = polarCoor[0]
-        #del polarCoor
-        #gc.collect()
+        del polarCoor
+        gc.collect()
     #dataArray = data.astype('float32')
     print("dim array first: " + str(dataArray.ndim))
     print("first timestamp: " + str(firstTimestamp))
