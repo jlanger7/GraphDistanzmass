@@ -10,8 +10,7 @@ class knoten{
     int id;
     int zeitAttribut;
     int zhkNr = -1;
-    vector<knoten*> adjazenzListe; //enthält IDs der Nachbarknoten
-
+    vector<knoten*> adjazenzListe; 
 
     public:
     knoten();

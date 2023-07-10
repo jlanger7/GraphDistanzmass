@@ -17,8 +17,8 @@ zeitreihe::zeitreihe(teilgraphenSet* teilgraphenIn){
         vecTmp.push_back((*teilgraphenIn).getTeilgraphen()[i].getAnzahlZhk());
         vecTmp.push_back((*teilgraphenIn).getTeilgraphen()[i].getMaxVZhk());
         vecTmp.push_back((*teilgraphenIn).getTeilgraphen()[i].getGesVt());
-        vecTmp.push_back((*teilgraphenIn).getTeilgraphen()[i].getMeanVt());
-        vecTmp.push_back((*teilgraphenIn).getTeilgraphen()[i].getMeanNrNachbarn());
+        //vecTmp.push_back((*teilgraphenIn).getTeilgraphen()[i].getMeanVt());
+        //vecTmp.push_back((*teilgraphenIn).getTeilgraphen()[i].getMeanNrNachbarn());
 
         zeitreihenWerte.push_back(vecTmp);
     }

@@ -284,7 +284,7 @@ vector<zeitreihe>* txtFileInterface::einlesenVonZeitreihen(string ordnerPfad){
     }
 
     vector<zeitreihe>* zeitreihen = new vector<zeitreihe>;
-    int anzahlZeitreihenAttribute = zeitreihe::anzahlAttribute;
+    int anzahlZeitreihenAttribute = 3;
     cout << "Anzahl Graphen: " + to_string(c/anzahlZeitreihenAttribute) << endl;
     for(int i = 0; i < c/anzahlZeitreihenAttribute; i++){
 

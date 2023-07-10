@@ -14,7 +14,7 @@ class zeitreihe{
     public:
     zeitreihe();
     zeitreihe(teilgraphenSet* teilgraphenIn);
-    const static int anzahlAttribute = 5;
+    const static int anzahlAttribute = 3;
     void printZeitreihe();
     double berechneDiskreteFrechetDistanzND(vector<vector<double>> q);
     double berechneDiskreteFrechetDistanzFunktionswertND(vector<vector<double>> q, double** caIn, int i , int j);

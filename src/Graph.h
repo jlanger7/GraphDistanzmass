@@ -12,8 +12,6 @@ class graph{
     int anzahlZhk;
     int maxVZhk;
     int gesVt;
-    int meanVt;
-    double meanNrNachbarn;
     vector<vector<knoten*>> zhkKnotenMengen;
 
 
@@ -22,8 +20,6 @@ class graph{
     graph(vector<knoten*>& knotenMengeIn);
     void addKnoten(knoten* knotenIn);
     void modifizierteTiefensucheNeu();
-    void modifizierteTiefensuche();
-    void durchsucheNachbarn(knoten& v, vector<knoten*>& adjazenzListe, int &aktNrZhks, int &tmpNrV);
 
     vector<knoten*>& getKnotenMenge(){
         return knotenMenge;
@@ -37,14 +33,6 @@ class graph{
     int getGesVt(){
         return gesVt;
     };
-    int getMeanVt(){
-        return meanVt;
-    };
-    double getMeanNrNachbarn(){
-        return meanNrNachbarn;
-    };
-
-
 };
 
 #endif

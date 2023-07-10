@@ -14,7 +14,8 @@ class txtFileInterface{
     const int dimY = 1501;
     vector<string> graphDateiZuordnung;
     vector<int> anzahlKnoten;
-    string pfadOutput = "C:\\Users\\Jonathan Langer\\OneDrive\\Bachelorarbeit\\Experimentdaten";
+    //string pfadOutput = "C:\\Users\\Jonathan Langer\\OneDrive\\Bachelorarbeit\\Experimentdaten";
+    string pfadOutput = "C:\\Users\\Jonathan Langer\\OneDrive\\Bachelorarbeit\\Experimentdaten\\100GraphenGleichmClustering\\Clustering";
     vector<int>** helpArr;
 
     public:
