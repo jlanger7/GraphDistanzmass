@@ -18,11 +18,12 @@ class teilgraphenSet{
     teilgraphenSet();
     teilgraphenSet(graph* inputGraph);
     void erstelleTeilgraphenSet();
-    int getAnzahlTeilgraphen(){
-        return anzahlTeilgraphen;
-    };
+    
     vector<graph>& getTeilgraphen(){
         return teilgraphen;
+    };
+    int getAnzahlTeilgraphen(){
+        return anzahlTeilgraphen;
     };
 
 };

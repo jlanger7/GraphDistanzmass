@@ -12,61 +12,50 @@ teilgraphenSet::teilgraphenSet(){
 
 teilgraphenSet::teilgraphenSet(graph* inputGraph){
 
-    cout << "       Konstruktor TG Start" << endl;
     gesamtGraph = inputGraph;
     erstelleTeilgraphenSet();
-    cout << "       Konstruktor TG Ende" << endl;
 };
 
+//Hier wird der Eingabegraph pro Zeitschritt in die Teilgraphen eingeteilt
 void teilgraphenSet::erstelleTeilgraphenSet(){
 
+    //Knotenmenge des Eingabegraphen
     vector<knoten*> gesamtKnotenMenge = (*gesamtGraph).getKnotenMenge();
     int aktMaxZeitattribut = 0;
 
+    //Iteriere über alle Knoten und füge ihn dem den Zeitschritt entsprechenden Teilgraphen hinzu, bzw. erstelle diesen Teilgraphen, falls er noch nicht existiert
     for(int v = 0; v < size(gesamtKnotenMenge); v++){
         
+        //Nehme den aktuell betrachteten Knoten und seinen Zeitschritt
         knoten* aktKnoten = gesamtKnotenMenge[v];
         int zeitAttributAktKnoten = (*aktKnoten).getZeitAttribut();
+
+        //Wenn Zeitschritt vom aktuellen Knoten größer ist, als der größte bisher betrachtete, dann initialisiere Teilgraphen für die Differenz in den Zeitschritten
         if(zeitAttributAktKnoten > aktMaxZeitattribut){
 
             int differenz = zeitAttributAktKnoten - aktMaxZeitattribut;
-            //cout << "differenz: " + to_string(differenz) << endl;
             aktMaxZeitattribut = zeitAttributAktKnoten;
             for(int i = 0; i < differenz; i++){
 
                 graph teilgraph;
+                //Füge neuen Teilgraphen der Teilgraphenliste hinzu
                 teilgraphen.push_back(teilgraph);
-                /*
-                cout << "Teilgraph fuer Te: " + to_string(zeitAttributAktKnoten) << endl;
-                */
             }
         }
+        //Füge aktuellen Knoten dem Zeitschritt entsprechenden Teilgraphen in der Teilgraphenliste hinzu 
         teilgraphen[zeitAttributAktKnoten-1].addKnoten(aktKnoten);
+
+        //Lösche alle Knoten aus der Adjazenzliste, bei denen der Zeitschritt nicht mit dem des aktuellen Knotens übereinstimmt, damit Kanten nur zwischen Knoten mit gleichem
+        //Zeitschritt existieren
         for(int n = 0; n < size((*aktKnoten).getAdjazenzListe()); n++){
 
             if(!((*(*aktKnoten).getAdjazenzListe()[n]).getZeitAttribut() == zeitAttributAktKnoten)){
-                //cout << "loesche: " + to_string((*(*aktKnoten).getAdjazenzListe()[n]).getId()) + " von Knoten: " + to_string((*aktKnoten).getId()) << endl;
-                //(*aktKnotenNeu).getAdjazenzListe().erase((*aktKnotenNeu).getAdjazenzListe().begin()+n);
+                
                 (*aktKnoten).loescheNtesElementAusAdjazenzListe(n);
-                //Hier könnte man noch verlorene Kante abspeichern, falls man die noch benutzen möchte
+                //Hier könnte man noch verlorene Kanten abspeichern, falls man die noch nutzen möchte
                 n -= 1;
-
-                /*
-                cout << "AdjazenzListe von Knoten: " + to_string(v) << endl;
-                for(int k = 0; k < size((*aktKnoten).getAdjazenzListe()); k++){
-                    cout << "   Nachbar: " + to_string((*(*aktKnoten).getAdjazenzListe()[k]).getId()) << endl;
-                }
-                */
             }
         }
     }
     anzahlTeilgraphen = aktMaxZeitattribut;
-    /*
-    for(int k = 0; k < size((*teilgraphen[0].getKnotenMenge()[0]).getAdjazenzListe()); k++){
-        cout << "Nachbar Test: " + to_string((*(*teilgraphen[0].getKnotenMenge()[0]).getAdjazenzListe()[k]).getId()) << endl;
-    }
-    cout << "aktMaxZeitattribut: " + to_string(aktMaxZeitattribut) << endl;
-    anzahlTeilgraphen = aktMaxZeitattribut;
-    cout << "anzahl Teilgraphen: " + to_string(anzahlTeilgraphen) << endl;
-    */
 };
