@@ -9,9 +9,8 @@ pamClustering::pamClustering(vector<vector<double>>* distanzMatrixIn, int kIn){
     k = kIn;
 };
 
+//Implementierung BUILD-Phase von Kaufman, L., & Rousseeuw, P. J. (n. d.). Partitioning Around Medoids (Program PAM).
 void pamClustering::init(){
-
-    cout << "   init Clustering fuer ka: " + to_string(k) << endl;
 
     //----------------suche erstes init medoid------------
     //init tmp variablen
@@ -28,14 +27,14 @@ void pamClustering::init(){
             //füge Distanz von Objekt i zu j der Summe hinzu
             tmpDistSum += (*distanzMatrix)[i][j];
         }
-        //wenn Distanzsumme von objekt i kleiner ist, als aktuelles Minimum, dann aktualisiere es
+        //wenn Distanzsumme von objekt i kleiner ist, als aktuelles Minimum, dann aktualisiere das Minimum
         if(i == 0 || tmpDistSum < tmpMinDistSum){
             tmpMinDistSum = tmpDistSum;
             tmpMinElement = i;
         }
     }
 
-    //füge der Liste erstes medoid hinzu
+    //füge der Liste ersten Medoiden hinzu
     medoids.push_back(tmpMinElement);
     //initialisiere Liste über noch nicht selektierte Objekte
     for(int i = 0; i < size(*distanzMatrix); i++){
@@ -85,90 +84,80 @@ double pamClustering::getDistanzZumNaechstenGewaehltenMedoid(int objekt){
             tmpMin = (*distanzMatrix)[objekt][medoids[i]];
         }
     }
-    //cout << "Distanz von Objekt " + to_string(objekt) + " zu medoid: " + to_string(tmpMin)<< endl;
     return tmpMin;
 };
 
+//Implementierung SWAP-Phase von Kaufman, L., & Rousseeuw, P. J. (n. d.). Partitioning Around Medoids (Program PAM).
 vector<vector<int>> pamClustering::berechneClustering(){
 
+    //Berechne initiale Medoids
     init();
 
-    cout << "   berechne Clustering" << endl;
-
+    //Führe maximal 99 Iterationen zur Verfeinerung der Medoids-Wahl durch
     bool konvergiert = false;
     int iterationen = 0;
     while(!konvergiert && iterationen < 99){
 
-        //cout << "   Iteration Clustering Nr. " + to_string(iterationen) << endl;
         double minKosten;
         int minI;
         int minH;
+        //Prüfe Effekt eines Tausches von aktuell gewähltem Medoiden i mit...
         for(int i = 0; i < size(medoids); i++){
+            //...aktuell nicht gewähltem Objekt h:
             for(int h = 0; h < size(nichtSelektierteObjekte); h++){
 
+                //Initialisiere den Beitrag, den der Tausch von i und h zur Verbesserung der Kostenfunktion beitragen würde
                 double sumTauschIH = 0;
+                //Prüfe Effekt eines Tausches von i und h auf konkretes nicht-gewähltes Objekt j, das nicht Objekt h ist
                 for(int j = 0; j < size(nichtSelektierteObjekte); j++){
-
-                    // if(nichtSelektierteObjekte[h] == 0 && nichtSelektierteObjekte[j] == 1 || nichtSelektierteObjekte[h] == 192 && nichtSelektierteObjekte[j] == 193){
-                    //     cout << "Distanz von " + to_string(nichtSelektierteObjekte[h]) + " zu " + to_string(nichtSelektierteObjekte[j]) + " = " + 
-                    //         to_string((*distanzMatrix)[nichtSelektierteObjekte[j]][nichtSelektierteObjekte[h]]) + " bzw " + to_string((*distanzMatrix)[nichtSelektierteObjekte[h]][nichtSelektierteObjekte[j]]) << endl;
-                    // }
                     
+                    //Prüfe nur, wenn Objekt j nicht Objekt h ist
                     if(j!=h){
 
+                        //Effekt des Tausches von i und h auf j
                         double c;
+                        //Distanz von Objekt j zu dem aktuell gewähltem Meodiden, der ihm am nächsten ist
                         double distanzNaechsterMedoid = getDistanzZumNaechstenGewaehltenMedoid(nichtSelektierteObjekte[j]);
-                        //cout << "       returnWert naechster: " + to_string(minDistanzZuEinemAnderenMedoid) << endl;
-                        //cout << "       was here: " + to_string(__LINE__) << endl;
+
+                        //Wenn i und h von j weiter entfernt sind, als sein aktuell nächster Medoid, dann hat der Tausch von i und h keinen Effekt auf j
                         if((*distanzMatrix)[nichtSelektierteObjekte[j]][nichtSelektierteObjekte[h]] > distanzNaechsterMedoid && 
                                 (*distanzMatrix)[nichtSelektierteObjekte[j]][medoids[i]] > distanzNaechsterMedoid){
+
                             c = 0;
-                            //if (iterationen > 998){cout << "       Iteration: " + to_string(iterationen) + " if1" << endl;}
                         }
-                        //cout << "       was here: " + to_string(__LINE__) << endl;
-                        //cout << "       Wert Distanzmatrix: " + to_string((*distanzMatrix)[nichtSelektierteObjekte[j]][medoids[i]]) << endl;
+                        //Wenn i nicht weiter entfernt von j ist, als sein aktuell nächster Medoid...
                         if((*distanzMatrix)[nichtSelektierteObjekte[j]][medoids[i]] <= distanzNaechsterMedoid){
 
-                            //cout << "       was here: " + to_string(__LINE__) << endl;
+                            //Distanz von Objekt j zu dem aktuell gewähltem Meodiden, der ihm am zweit-nächsten ist
                             double distanzZweitNaechsterMedoid = getDistanzZumZweitNaechstenGewaehltenMedoid(nichtSelektierteObjekte[j]);
-                            // if (iterationen > 98){
-                                
-                            //     cout << "       distanz zweitnaechstes medoid: " + to_string(distanzZweitNaechsterMedoid) << endl;
-                            //     cout << "       distanz naechstes medoid: " + to_string(distanzNaechsterMedoid) << endl;
-                            //     cout << "       distanzen zu allen medoids: " << endl;
-
-                            //     for(int i = 0; i < size(medoids); i++){
-
-                            //         cout << (*distanzMatrix)[nichtSelektierteObjekte[j]][medoids[i]] << " ";
-                            //     }
-                            //     cout << endl;
-                            // }
-                            //cout << "       returnWert zweitnaechster: " + to_string(distanzZweitNaechsterMedoid) << endl;
-                            //cout << "       was here: " + to_string(__LINE__) << endl;
+                            
+                            //Objekt j ist näher an h, als am zweit-nächsten Medoiden
                             if((*distanzMatrix)[nichtSelektierteObjekte[j]][nichtSelektierteObjekte[h]] < distanzZweitNaechsterMedoid){
-                                //cout << "       was here: " + to_string(__LINE__) << endl;
                                 
+                                //Bei Tausch von i und h wäre h der neue nächste Medoid von j, somit wäre der Beitrag d(j,h)-d(j,i) 
                                 c = (*distanzMatrix)[nichtSelektierteObjekte[j]][nichtSelektierteObjekte[h]] - (*distanzMatrix)[nichtSelektierteObjekte[j]][medoids[i]];
-                                //if (iterationen > 998){cout << "       Iteration: " + to_string(iterationen) + " if2" << endl;}
-                            }else{
-                                //cout << "       was here: " + to_string(__LINE__) << endl;
+                            }
+                            //Objekt j ist nicht näher an h, als am zweit-nächsten Medoiden
+                            else{
                                 
+                                //Bei Tausch von i und h wäre der aktuell zweit-nächste Medoid der neue nächste Medoid von j, somit wäre der Beitrag: 
+                                //d(j, aktuell zweit-nächster Medoid)-d(j, aktuell nächster Medoid)
                                 c = distanzZweitNaechsterMedoid - distanzNaechsterMedoid;
-                                //if (iterationen > 998){cout << "       Iteration: " + to_string(iterationen) + " if3" << endl;}
                             }
                         }
-                        //cout << "       returnWert naechster: " + to_string(distanzNaechsterMedoid) << endl;
-                        //cout << "       was here: " + to_string(__LINE__) << endl;
+                        //Objekt ist weiter weg von i als von mindestens einem anderen aktuellen Medoiden (i ist also nicht der nächste Medoid von j), aber näher an h,
+                        //als an allen anderen aktuellen medoiden -> h wäre also neuer Medoid bei Tausch von i und h
                         if((*distanzMatrix)[nichtSelektierteObjekte[j]][medoids[i]] > distanzNaechsterMedoid && 
                                 (*distanzMatrix)[nichtSelektierteObjekte[j]][nichtSelektierteObjekte[h]] <= distanzNaechsterMedoid){
                                 
-                            //cout << "       was here: " + to_string(__LINE__) << endl;
+                            //Beitrag wäre die Differenz, um die h näher an j ist, als j's aktueller nächster Medoid
                             c = (*distanzMatrix)[nichtSelektierteObjekte[j]][nichtSelektierteObjekte[h]] - distanzNaechsterMedoid;
-                            //if (iterationen > 998){cout << "       Iteration: " + to_string(iterationen) + " if4" << endl;}
                         }
+                        //Addiere Beitrag von aktuellem j zu Beiträgen aller j's bei Tausch von i und h
                         sumTauschIH += c;
                     }
                 }
+                //Aktualisiere besten Tausch
                 if((i == 0 && h == 0) || (sumTauschIH < minKosten)){
                     
                     minKosten = sumTauschIH;
@@ -177,46 +166,25 @@ vector<vector<int>> pamClustering::berechneClustering(){
                 }
             }
         }
+        //Wenn bester Tausch der aktuellen Iteration die Gesamtkostenfunktion verringert, dann führe ihn durch
         if(minKosten < 0){
             
-            //cout << "       was here: " + to_string(__LINE__) << endl;
             int neuerMedoid = nichtSelektierteObjekte[minH];
             int neuesNichtselektierteObjekt = medoids[minI];
-            // if (iterationen > 98){
-            //     cout << "       neuer Medoid Objekt: " + to_string(nichtSelektierteObjekte[minH]) + " entfernter Medoid " + to_string(medoids[minI]) << endl;
-            // }
             nichtSelektierteObjekte.erase(nichtSelektierteObjekte.begin()+minH);
             nichtSelektierteObjekte.push_back(neuesNichtselektierteObjekt);
             medoids.erase(medoids.begin()+minI);
             medoids.push_back(neuerMedoid);
-            // if (iterationen > 98){
-            //     cout << "       nichtselektierteObjekte nun: " << " ";
-            //     for(int p = 0; p < size(nichtSelektierteObjekte); p++){
-            //         cout << nichtSelektierteObjekte[p] << " ";
-            //     }
-            //     cout << endl;
-            // }
-            // if (iterationen > 98){
-            //     cout << "       medoids nun: " << " ";
-            //     for(int p = 0; p < size(medoids); p++){
-            //         cout << medoids[p] << " ";
-            //     }
-            //     cout << endl;
-            // }
-            //cout << "       was here: " + to_string(__LINE__) << endl;
         }else{
             konvergiert = true;
             if(true){ cout << "Ende nach Iteration Nr. " + to_string(iterationen) << endl;}
         }
-
-        // if(iterationen < 99 && iterationen > 90 || iterationen < 9999 && iterationen > 9990){
-        //     berechneZuordnungZuCluster();
-        //     cout << "   Wert Kostenfkt nun " + to_string(wertKostenFunktion) << endl;
-        // }
         
         iterationen += 1;
     }
     cout << "   Clustering berechnet" << endl;
+    
+    //Berechne die Zuordnung eines jeden nicht gewählten Objekts zu seinem nächsten Medoiden/ Cluster
     berechneZuordnungZuCluster();
 
     return zuordnungZuCluster;
@@ -226,26 +194,33 @@ void pamClustering::berechneZuordnungZuCluster(){
 
     wertKostenFunktion = 0;
 
+    //Füge "zuordnungZuCluster" pro Medoid einen Vector hinzu, der zunächst nur den jeweiligen Medoiden enthält und das Cluster repräsentiert
     for(int i = 0; i < k; i++){
         vector<int> clusterMitglieder;
         clusterMitglieder.push_back(medoids[i]);
         zuordnungZuCluster.push_back(clusterMitglieder);
     }
+
+    //Finde für jedes Objekt den nächsten Medoiden und somit sein Cluster
     for(int i = 0; i < size(*distanzMatrix); i++){
         
         int minMedoidIndex;
         double minMedoidDist;
+        //Prüfe jeden Medoiden
         for(int m = 0; m < size(medoids); m++){
 
             double aktDistanz = ((double)(*distanzMatrix)[i][medoids[m]])*((double)(*distanzMatrix)[i][medoids[m]]);
+            //Aktualisiere den nächsten Medoiden
             if(m == 0 || aktDistanz < minMedoidDist){
 
                 minMedoidDist = aktDistanz;
-                //minMedoidDist = (*distanzMatrix)[i][medoids[m]];
                 minMedoidIndex = m;
             }
         }
+        //Addiere Wert zur Gesamtkostenfunktion hinzu
         wertKostenFunktion += minMedoidDist;
+
+        //Füge Objekt zu seinem Cluster hinzu
         if(i != zuordnungZuCluster[minMedoidIndex][0]){
             
             zuordnungZuCluster[minMedoidIndex].push_back(i);
@@ -253,22 +228,9 @@ void pamClustering::berechneZuordnungZuCluster(){
     }
 };
 
-double pamClustering::getDistanzZumWeitestenGewaehltenMedoidAusserI(int objekt, int medoidI){
-
-    double tmpMax = 0;
-    for(int i = 0; i < size(medoids); i++){
-
-        if((*distanzMatrix)[objekt][medoids[i]] > tmpMax && medoids[i]!= medoidI){
-
-            tmpMax = (*distanzMatrix)[objekt][medoids[i]];
-        }
-    }
-    //cout << "Distanz von Objekt " + to_string(objekt) + " zu medoid: " + to_string(tmpMax)<< endl;
-    return tmpMax;
-};
-
 double pamClustering::getDistanzZumZweitNaechstenGewaehltenMedoid(int objekt){
 
+    //Initialisiere Distanz zum nächsten und zweit-nächstem Medoiden
     double tmpMin;
     double tmpMin2;
     if((*distanzMatrix)[objekt][medoids[0]] <= (*distanzMatrix)[objekt][medoids[1]]){
@@ -279,13 +241,19 @@ double pamClustering::getDistanzZumZweitNaechstenGewaehltenMedoid(int objekt){
         tmpMin2 = (*distanzMatrix)[objekt][medoids[0]];
     }
     
+    //Prüfe jeden Medoiden, ob er näher am Eingabeobjekt ist als der aktuell nächste oder zweit-nächste Medoid
     for(int i = 0; i < size(medoids); i++){
 
+        //Wenn aktuell betrachteter Medoid i näher am Eingabeobjekt ist, als der bisher nächste Medoid, 
+        //dann wird der nächste Medoid durch i ersetzt und der bisher nächste Medoid wird zum zweit-nächsten Medoid
         if((*distanzMatrix)[objekt][medoids[i]] < tmpMin){
 
             tmpMin2 = tmpMin;
             tmpMin = (*distanzMatrix)[objekt][medoids[i]];
-        }else if((*distanzMatrix)[objekt][medoids[i]] < tmpMin2 && (*distanzMatrix)[objekt][medoids[i]] > tmpMin){
+        }
+        //Wenn aktuell betrachteter Medoid i nicht näher am Eingabeobjekt ist, als der bisher nächste Medoid, 
+        //aber näher als der bisher zweit-nächste Medoid, dann ersetze den bisher zweit-nächsten Medoiden durch i
+        else if((*distanzMatrix)[objekt][medoids[i]] < tmpMin2 && (*distanzMatrix)[objekt][medoids[i]] > tmpMin){
             tmpMin2 = (*distanzMatrix)[objekt][medoids[i]];
         }
     }

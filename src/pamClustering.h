@@ -19,10 +19,10 @@ class pamClustering{
     pamClustering(vector<vector<double>>* distanzMatrixIn, int kIn);
     void init();
     double getDistanzZumNaechstenGewaehltenMedoid(int objekt);
-    double getDistanzZumWeitestenGewaehltenMedoidAusserI(int objekt, int medoidI);
     double getDistanzZumZweitNaechstenGewaehltenMedoid(int objekt);
     vector<vector<int>> berechneClustering();
     void berechneZuordnungZuCluster();
+
     double getWertKostenfunktion(){
         return wertKostenFunktion;
     };
