@@ -19,7 +19,7 @@ tests: progs
 
 progs:	main	
 
-main: src/txtFileInterface.cpp src/knoten.cpp src/graph.cpp src/teilgraphenSet.cpp src/zeitreihe.cpp src/pamClustering.cpp src/main.cpp # src/zeitreihe.cpp tests/zeitreiheTest.cpp #src/knoten.cpp src/test.cpp#src/knoten.cpp src/graph.cpp src/teilgraphenSet.cpp src/main.cpp #
+main: src/txtFileInterface.cpp src/knoten.cpp src/graph.cpp src/teilgraphenSet.cpp src/zeitreihe.cpp src/pamClustering.cpp src/main.cpp 
 	g++ -o $@ $^ $(LDLIBS) 
 
 
