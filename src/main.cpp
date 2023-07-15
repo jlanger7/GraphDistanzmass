@@ -83,26 +83,31 @@ void clusteringBerechnen(int startk, int endK, string distanzmass, vector<vector
    vector<double> wertKostenfunktion0;
    vector<double> wertKostenfunktion1;
    vector<double> wertKostenfunktion2;
+   //Berechne Clustering für alle k von "startK" bis "endK" und speichere Clustereinteilungen der Objekte
    for(int k = startk; k < endK+1; k++){
 
+      //Clustering auf Distanzmatrix, die mit DTW oder Frechet Distanz berechnet wurde
       pamClustering c(&distanzMatrixGes, k);
       vector<vector<int>> cluster = c.berechneClustering();
       cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c.getWertKostenfunktion()) << endl;
       wertKostenfunktionGes.push_back(c.getWertKostenfunktion());
       txt.speichereCluster(cluster, k, "AttributeGesamt_"+distanzmass, c.getWertKostenfunktion());
 
+      //Clustering auf Distanzmatrix, die nur Distanz bzgl einzelnem Attribut mit absolutem Abstand enthält
       pamClustering c1(&distanzMatrixNrZHK, k);
       vector<vector<int>> cluster1 = c1.berechneClustering();
       cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c1.getWertKostenfunktion()) << endl;
       wertKostenfunktion0.push_back(c1.getWertKostenfunktion());
       txt.speichereCluster(cluster1, k, "Attribut0_"+distanzmass, c1.getWertKostenfunktion());
 
+      //Clustering auf Distanzmatrix, die nur Distanz bzgl einzelnem Attribut mit absolutem Abstand enthält
       pamClustering c2(&distanzMatrixMaxZHK, k);
       vector<vector<int>> cluster2 = c2.berechneClustering();
       cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c2.getWertKostenfunktion()) << endl;
       wertKostenfunktion1.push_back(c2.getWertKostenfunktion());
       txt.speichereCluster(cluster2, k, "Attribut1_"+distanzmass, c2.getWertKostenfunktion());
 
+      //Clustering auf Distanzmatrix, die nur Distanz bzgl einzelnem Attribut mit absolutem Abstand enthält
       pamClustering c3(&distanzMatrixGesVt, k);
       vector<vector<int>> cluster3 = c3.berechneClustering();
       cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c3.getWertKostenfunktion()) << endl;
