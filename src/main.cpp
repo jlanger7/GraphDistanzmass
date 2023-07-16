@@ -14,16 +14,15 @@
 #include "teilgraphenSet.h"
 #include "zeitreihe.h"
 #include "pamClustering.h"
-#include "../tests/zeitreiheTest.h"
 using namespace std;
 
-string graphDatenOrdnerPfad = "";
-string zeitreihenOrdnerPfad = "";
+string graphDatenOrdnerPfad = "../data/GraphDateienToProcess";"C:\Users\Jonathan Langer\Desktop\Bachelorarbeit\GraphDistanzmass\data\GraphDateienToProcess"
+string zeitreihenOrdnerPfad = "../zeitreihen";
 
 void graphenZuZeitreihenTransformieren(){
 
    txtFileInterface txt;
-   //---------------Neue Methode Kanten berechnen Testen-----------------
+   //Graphdateien einlesen
    vector<string> graphDateien1 = txt.getGraphdatenDateinamen(graphDatenOrdnerPfad);
    cout << "Anzahl Graphdateien im Ordner: " + to_string(size(graphDateien1)) << endl;
    int anzahlBereitsvorhandeneGraphen = 0;
@@ -36,7 +35,7 @@ void graphenZuZeitreihenTransformieren(){
       auto now = std::chrono::system_clock::now();
       std::time_t t_c = std::chrono::system_clock::to_time_t(now);
       std::cout << "Startzeit neue Methode " << std::ctime(&t_c);
-      //----------------Erstelle die erste Zeitreihe-----------------------
+      //----------------Erstelle die Zeitreihe-----------------------
       //Erstelle eine Knotenliste aus der Inputdatei für den aktuell betrachteten Graphen, inkl. Zeitschrittattribut für jeden Knoten
       vector<knoten*> knotenListe1 = txt.readInNodes(graphDatenOrdnerPfad + "\\" + graphDateien1[i]);
       if((*knotenListe1[0]).getZeitAttribut() != 0 && (*knotenListe1[size(knotenListe1)-1]).getZeitAttribut() != 287){
@@ -124,7 +123,7 @@ void clusteringBerechnen(int startk, int endK, string distanzmass, vector<vector
 void zeitreihenDistanzmatritzenUndClusteringBerechnen(bool dtw){
 
    txtFileInterface txt;
-   vector<zeitreihe>* zz = txt.einlesenVonZeitreihen(zeitreihenOrdnerPfad);
+   vector<zeitreihe>* zz = txt.einlesenVonZeitreihen(zeitreihenOrdnerPfad, 3);
 
    cout << "Groesse zz: " + to_string(size(*zz)) << endl;
 
@@ -176,6 +175,13 @@ void zeitreihenDistanzmatritzenUndClusteringBerechnen(bool dtw){
 }
 
 int main(){
+
+   txtFileInterface txt;
+   //Graphdateien einlesen
+   vector<string> graphDateien1 = txt.getGraphdatenDateinamen(graphDatenOrdnerPfad);
+   cout << "Anzahl Graphdateien im Ordner: " + to_string(size(graphDateien1)) << endl;
+
+   return 0;
 
    graphenZuZeitreihenTransformieren();
 
