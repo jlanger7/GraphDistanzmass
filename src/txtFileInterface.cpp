@@ -390,22 +390,3 @@ void txtFileInterface::speichereWerteKostenfunktion(vector<double> werteKostenfu
 
     myfile2.close();
 }
-
-void txtFileInterface::graphZuordnungUndAnzahlKnoten(){
-
-    auto now = std::chrono::system_clock::now();
-    auto in_time_t = std::chrono::system_clock::to_time_t(now);
-    std::stringstream datetime;
-    datetime << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d_%H-%M-%S");
-
-    cout << "datetime berechnet" << endl;
-    
-    ofstream myfile(pfadOutput + "\\GraphZuordnungUndAnzahlKnoten_" + datetime.str() + ".txt");
-
-    //schreibe Zuordnung der Graph Nr zu Dateiname weg
-    for(int i = 0; i < size(graphDateiZuordnung); i++){
-
-        myfile << "Graph Nr. " + to_string(i) + " = " + graphDateiZuordnung[i] + " - Anzahl Knoten: " + to_string(anzahlKnoten[i]) << endl;
-    }
-    myfile << endl;
-};

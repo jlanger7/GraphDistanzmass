@@ -16,8 +16,8 @@
 #include "pamClustering.h"
 using namespace std;
 
-string graphDatenOrdnerPfad = "../data/GraphDateienToProcess";"C:\Users\Jonathan Langer\Desktop\Bachelorarbeit\GraphDistanzmass\data\GraphDateienToProcess"
-string zeitreihenOrdnerPfad = "../zeitreihen";
+string graphDatenOrdnerPfad = "data/GraphDateien";
+string zeitreihenOrdnerPfad = "data/zeitreihen";
 
 void graphenZuZeitreihenTransformieren(){
 
@@ -175,13 +175,6 @@ void zeitreihenDistanzmatritzenUndClusteringBerechnen(bool dtw){
 }
 
 int main(){
-
-   txtFileInterface txt;
-   //Graphdateien einlesen
-   vector<string> graphDateien1 = txt.getGraphdatenDateinamen(graphDatenOrdnerPfad);
-   cout << "Anzahl Graphdateien im Ordner: " + to_string(size(graphDateien1)) << endl;
-
-   return 0;
 
    graphenZuZeitreihenTransformieren();
 

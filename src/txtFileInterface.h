@@ -14,7 +14,7 @@ class txtFileInterface{
     const int dimY = 1501;
     vector<string> graphDateiZuordnung;
     vector<int> anzahlKnoten;
-    string pfadOutput = " ";
+    string pfadOutput = "data/clustering";
     vector<int>** hilfsArrayKanten;
 
     public:
@@ -34,7 +34,6 @@ class txtFileInterface{
     vector<vector<double>> einlesenVonDistanzmatrix(string matrixBezeichner, int dimension);
     void speichereCluster(vector<vector<int>> cluster, int k, string clusterBezeichner, int wertKostenfunktion);
     void speichereWerteKostenfunktion(vector<double> werteKostenfunktion, string bezeichner);
-    void graphZuordnungUndAnzahlKnoten();
 
     int getDimTime(){
         return dimTime;
