@@ -104,6 +104,10 @@ void zeitreihenDistanzmatritzenUndClusteringBerechnen(bool dtw){
    vector<vector<double>> distanzMatrixGes(size(*zz));
    for(int i = 0; i < size(*zz); i++){
       distanzMatrixGes[i] = vector<double>(size(*zz));
+      
+      for(int j = 0; j < size(*zz); j++){
+         distanzMatrixGes[i][j] = -1;
+      }
    }
 
    string verwendetesDistanzmass;
@@ -116,16 +120,20 @@ void zeitreihenDistanzmatritzenUndClusteringBerechnen(bool dtw){
 
          cout << "   mit Zeitreihe " + to_string(j) << endl;
 
-         //Füge Distanzen den Distanzmatrizen hinzu 
-         if(!dtw){
-            distanzMatrixGes[i][j] = (*zz)[i].berechneDiskreteFrechetDistanzND((*zz)[j].getZeitreihenWerte());
-            verwendetesDistanzmass = "frechet";
-         }else if(dtw){
-            distanzMatrixGes[i][j] = (*zz)[i].berechneDtwDistanzND((*zz)[j].getZeitreihenWerte());
-            verwendetesDistanzmass = "dtw";
+         //Distanzen sind symmetrisch
+         if(distanzMatrixGes[i][j] == -1 || distanzMatrixGes[j][i] == -1){
+
+            //Füge Distanzen den Distanzmatrizen hinzu 
+            if(!dtw){
+               distanzMatrixGes[i][j] = (*zz)[i].berechneDiskreteFrechetDistanzND((*zz)[j].getZeitreihenWerte());
+               distanzMatrixGes[j][i] = distanzMatrixGes[i][j];
+               verwendetesDistanzmass = "frechet";
+            }else if(dtw){
+               distanzMatrixGes[i][j] = (*zz)[i].berechneDtwDistanzND((*zz)[j].getZeitreihenWerte());
+               distanzMatrixGes[j][i] = distanzMatrixGes[i][j];
+               verwendetesDistanzmass = "dtw";
+            }
          }
-         //Matrizen sind symmetrisch, also hier evtl auch Werte für [j][i] einfügen und oben zu Beginn pruefen, ob Wert schon
-         //berechnet wurde
       }
    }
    txt.speichereDistanzmatrix(distanzMatrixGes, "AttributeGesamt_"+verwendetesDistanzmass);
