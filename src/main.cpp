@@ -57,6 +57,7 @@ void graphenZuZeitreihenTransformieren(){
          //Initialisiere eine Zeitreihe für die Teilgraphen
          zeitreihe z1(tgSet1);
          //z1.printZeitreihe();
+         //Speichere Zeitreihen einzeln pro Zeitreihenattribut
          txt.speichereZeitreihe(z1, 0, zeitreihenOrdnerPfad+"\\" + "graphNr" + to_string(graphNr) + "_attributNr0_" + graphDateien1[i]);
          txt.speichereZeitreihe(z1, 1, zeitreihenOrdnerPfad+"\\" + "graphNr" + to_string(graphNr) + "_attributNr1_" + graphDateien1[i]);
          txt.speichereZeitreihe(z1, 2, zeitreihenOrdnerPfad+"\\" + "graphNr" + to_string(graphNr) + "_attributNr2_" + graphDateien1[i]);
@@ -74,14 +75,11 @@ void graphenZuZeitreihenTransformieren(){
    }
 }
 
-void clusteringBerechnen(int startk, int endK, string distanzmass, vector<vector<double>> distanzMatrixGes, vector<vector<double>> distanzMatrixNrZHK,vector<vector<double>> distanzMatrixMaxZHK ,vector<vector<double>> distanzMatrixGesVt){
+void clusteringBerechnen(int startk, int endK, string distanzmass, vector<vector<double>> distanzMatrixGes){
 
    txtFileInterface txt;
    
    vector<double> wertKostenfunktionGes;
-   vector<double> wertKostenfunktion0;
-   vector<double> wertKostenfunktion1;
-   vector<double> wertKostenfunktion2;
    //Berechne Clustering für alle k von "startK" bis "endK" und speichere Clustereinteilungen der Objekte
    for(int k = startk; k < endK+1; k++){
 
@@ -91,33 +89,9 @@ void clusteringBerechnen(int startk, int endK, string distanzmass, vector<vector
       cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c.getWertKostenfunktion()) << endl;
       wertKostenfunktionGes.push_back(c.getWertKostenfunktion());
       txt.speichereCluster(cluster, k, "AttributeGesamt_"+distanzmass, c.getWertKostenfunktion());
-
-      //Clustering auf Distanzmatrix, die nur Distanz bzgl einzelnem Attribut mit absolutem Abstand enthält
-      pamClustering c1(&distanzMatrixNrZHK, k);
-      vector<vector<int>> cluster1 = c1.berechneClustering();
-      cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c1.getWertKostenfunktion()) << endl;
-      wertKostenfunktion0.push_back(c1.getWertKostenfunktion());
-      txt.speichereCluster(cluster1, k, "Attribut0_"+distanzmass, c1.getWertKostenfunktion());
-
-      //Clustering auf Distanzmatrix, die nur Distanz bzgl einzelnem Attribut mit absolutem Abstand enthält
-      pamClustering c2(&distanzMatrixMaxZHK, k);
-      vector<vector<int>> cluster2 = c2.berechneClustering();
-      cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c2.getWertKostenfunktion()) << endl;
-      wertKostenfunktion1.push_back(c2.getWertKostenfunktion());
-      txt.speichereCluster(cluster2, k, "Attribut1_"+distanzmass, c2.getWertKostenfunktion());
-
-      //Clustering auf Distanzmatrix, die nur Distanz bzgl einzelnem Attribut mit absolutem Abstand enthält
-      pamClustering c3(&distanzMatrixGesVt, k);
-      vector<vector<int>> cluster3 = c3.berechneClustering();
-      cout << "Kosten mit k = " + to_string(k) + " : " + to_string(c3.getWertKostenfunktion()) << endl;
-      wertKostenfunktion2.push_back(c3.getWertKostenfunktion());
-      txt.speichereCluster(cluster3, k, "Attribut2_"+distanzmass, c3.getWertKostenfunktion());
    }
 
    txt.speichereWerteKostenfunktion(wertKostenfunktionGes, "Gesamt_"+distanzmass);
-   txt.speichereWerteKostenfunktion(wertKostenfunktion0, "Attribut0_"+distanzmass);
-   txt.speichereWerteKostenfunktion(wertKostenfunktion1, "Attribut1_"+distanzmass);
-   txt.speichereWerteKostenfunktion(wertKostenfunktion2, "Attribut2_"+distanzmass);
 }
 
 void zeitreihenDistanzmatritzenUndClusteringBerechnen(bool dtw){
@@ -128,14 +102,8 @@ void zeitreihenDistanzmatritzenUndClusteringBerechnen(bool dtw){
    cout << "Groesse zz: " + to_string(size(*zz)) << endl;
 
    vector<vector<double>> distanzMatrixGes(size(*zz));
-   vector<vector<double>> distanzMatrixNrZHK(size(*zz));
-   vector<vector<double>> distanzMatrixMaxZHK(size(*zz));
-   vector<vector<double>> distanzMatrixGesVt(size(*zz));
    for(int i = 0; i < size(*zz); i++){
       distanzMatrixGes[i] = vector<double>(size(*zz));
-      distanzMatrixNrZHK[i] = vector<double>(size(*zz));
-      distanzMatrixMaxZHK[i] = vector<double>(size(*zz));
-      distanzMatrixGesVt[i] = vector<double>(size(*zz));
    }
 
    string verwendetesDistanzmass;
@@ -151,15 +119,9 @@ void zeitreihenDistanzmatritzenUndClusteringBerechnen(bool dtw){
          //Füge Distanzen den Distanzmatrizen hinzu 
          if(!dtw){
             distanzMatrixGes[i][j] = (*zz)[i].berechneDiskreteFrechetDistanzND((*zz)[j].getZeitreihenWerte());
-            distanzMatrixNrZHK[i][j] = (*zz)[i].berechneDiskreteFrechetDistanz1D((*zz)[j].getZeitreihenWerte(),0);
-            distanzMatrixMaxZHK[i][j] = (*zz)[i].berechneDiskreteFrechetDistanz1D((*zz)[j].getZeitreihenWerte(),1);
-            distanzMatrixGesVt[i][j] = (*zz)[i].berechneDiskreteFrechetDistanz1D((*zz)[j].getZeitreihenWerte(),2);
             verwendetesDistanzmass = "frechet";
          }else if(dtw){
             distanzMatrixGes[i][j] = (*zz)[i].berechneDtwDistanzND((*zz)[j].getZeitreihenWerte());
-            distanzMatrixNrZHK[i][j] = (*zz)[i].berechneDtwDistanz1D((*zz)[j].getZeitreihenWerte(),0);
-            distanzMatrixMaxZHK[i][j] = (*zz)[i].berechneDtwDistanz1D((*zz)[j].getZeitreihenWerte(),1);
-            distanzMatrixGesVt[i][j] = (*zz)[i].berechneDtwDistanz1D((*zz)[j].getZeitreihenWerte(),2);
             verwendetesDistanzmass = "dtw";
          }
          //Matrizen sind symmetrisch, also hier evtl auch Werte für [j][i] einfügen und oben zu Beginn pruefen, ob Wert schon
@@ -167,11 +129,8 @@ void zeitreihenDistanzmatritzenUndClusteringBerechnen(bool dtw){
       }
    }
    txt.speichereDistanzmatrix(distanzMatrixGes, "AttributeGesamt_"+verwendetesDistanzmass);
-   txt.speichereDistanzmatrix(distanzMatrixNrZHK, "Attribut0_"+verwendetesDistanzmass);
-   txt.speichereDistanzmatrix(distanzMatrixMaxZHK, "Attribut1_"+verwendetesDistanzmass);
-   txt.speichereDistanzmatrix(distanzMatrixGesVt, "Attribut2_"+verwendetesDistanzmass);
 
-   clusteringBerechnen(2, 5, verwendetesDistanzmass, distanzMatrixGes, distanzMatrixNrZHK, distanzMatrixMaxZHK, distanzMatrixGesVt);
+   clusteringBerechnen(2, 5, verwendetesDistanzmass, distanzMatrixGes);
 }
 
 int main(){
@@ -184,16 +143,8 @@ int main(){
    //Clustering berechnen für Distanzmatrizen, die bereits berechnet und abgespeichert worden sind
    // txtFileInterface txt;
    // vector<vector<double>> distanzMatrixGes = txt.einlesenVonDistanzmatrix("AttributeGesamt_dtw", 100);
-   // vector<vector<double>> distanzMatrixNrZHK = txt.einlesenVonDistanzmatrix("Attribut0_dtw", 100);
-   // vector<vector<double>> distanzMatrixMaxZHK = txt.einlesenVonDistanzmatrix("Attribut1_dtw", 100);;
-   // vector<vector<double>> distanzMatrixGesVZHK = txt.einlesenVonDistanzmatrix("Attribut2_dtw", 100);;
-   // clusteringBerechnen(2, 10, "dtw", distanzMatrixGes, distanzMatrixNrZHK, distanzMatrixMaxZHK, distanzMatrixGesVZHK);
+   // clusteringBerechnen(2, 5, "dtw", distanzMatrixGes);
 
    return 0;
 
 }
-
-
-
-
-
